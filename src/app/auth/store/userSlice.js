@@ -8,7 +8,6 @@ import { setInitialSettings, setDefaultSettings } from 'app/store/fuse/settingsS
 import { showMessage } from 'app/store/fuse/messageSlice';
 import auth0Service from 'app/services/auth0Service';
 import firebaseService from 'app/services/firebaseService';
-import jwtService from 'app/services/jwtService';
 
 export const setUserDataAuth0 = tokenData => async dispatch => {
   const user = {
@@ -126,13 +125,6 @@ export const logoutUser = () => async (dispatch, getState) => {
       firebaseService.signOut();
       break;
     }
-    case 'auth0': {
-      auth0Service.logout();
-      break;
-    }
-    default: {
-      jwtService.logout();
-    }
   }
 
   dispatch(setInitialSettings());
@@ -171,26 +163,15 @@ export const updateUserData = user => async (dispatch, getState) => {
         });
       break;
     }
-    default: {
-      jwtService
-        .updateUserData(user)
-        .then(() => {
-          dispatch(showMessage({ message: 'User data saved with api' }));
-        })
-        .catch(error => {
-          dispatch(showMessage({ message: error.message }));
-        });
-      break;
-    }
   }
 };
 
 const initialState = {
   role: [], // guest
   data: {
-    displayName: 'John Doe',
+    displayName: '',
     photoURL: 'assets/images/avatars/Velazquez.jpg',
-    email: 'johndoe@withinpixels.com',
+    email: '',
     shortcuts: ['calendar', 'mail', 'contacts', 'todo']
   }
 };
