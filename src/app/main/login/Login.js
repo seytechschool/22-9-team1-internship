@@ -3,15 +3,11 @@ import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
 import { darken } from '@material-ui/core/styles/colorManipulator';
 import Tab from '@material-ui/core/Tab';
-import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Auth0LoginTab from './tabs/Auth0LoginTab';
 import FirebaseLoginTab from './tabs/FirebaseLoginTab';
-import JWTLoginTab from './tabs/JWTLoginTab';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -84,6 +80,11 @@ function Login() {
             </div>
             <Link className="font-normal mt-8" to="/">
               Back to Dashboard
+            </Link>
+          </div>
+          <div>
+            <Link className="font-normal mt-8" to="/pages/auth/forgot-password">
+              Forgot password
             </Link>
           </div>
         </Card>
