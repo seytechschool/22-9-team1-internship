@@ -11,6 +11,8 @@ import { motion } from 'framer-motion';
 import { Controller, useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
+import { useDispatch } from 'react-redux';
+import { resetPasswordWithFirebase } from 'app/auth/store/resetSlice';
 
 const useStyles = makeStyles(theme => ({
   root: {}
@@ -29,6 +31,7 @@ const defaultValues = {
 
 function ForgotPasswordPage() {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const { control, formState, handleSubmit, reset } = useForm({
     mode: 'onChange',
     defaultValues,
@@ -37,7 +40,9 @@ function ForgotPasswordPage() {
 
   const { isValid, dirtyFields, errors } = formState;
 
-  function onSubmit() {
+  function onSubmit(model) {
+    dispatch(resetPasswordWithFirebase(model));
+    console.log(defaultValues);
     reset(defaultValues);
   }
 
