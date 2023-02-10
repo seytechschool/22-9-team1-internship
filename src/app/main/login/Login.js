@@ -82,11 +82,9 @@ function Login() {
               Back to Dashboard
             </Link>
           </div>
-          <div>
-            <Link className="font-normal mt-8" to="/pages/auth/forgot-password">
-              Forgot password
-            </Link>
-          </div>
+          <Link className="font-normal" to="/pages/auth/forgot-password">
+            Forgot Password?
+          </Link>
         </Card>
 
         <div className={clsx(classes.rightSection, 'hidden md:flex flex-1 items-center justify-center p-64')}>

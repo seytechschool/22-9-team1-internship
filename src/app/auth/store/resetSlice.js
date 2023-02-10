@@ -1,36 +1,68 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { showMessage } from 'app/store/fuse/messageSlice';
 import firebaseService from 'app/services/firebaseService';
+import jwtService from 'app/services/jwtService';
+import { setUserData } from './userSlice';
 
-export const resetPasswordWithFirebase =
+export const submitLogin =
+  ({ email, password }) =>
+  async dispatch => {
+    return jwtService
+      .signInWithEmailAndPassword(email, password)
+      .then(user => {
+        dispatch(setUserData(user));
+
+        return dispatch(loginSuccess());
+      })
+      .catch(errors => {
+        return dispatch(loginError(errors));
+      });
+  };
+
+export const resetWithFireBase =
   ({ email }) =>
   async dispatch => {
     if (!firebaseService.auth) {
       console.warn("Firebase Service didn't initialize, check your configuration");
+
       return () => false;
     }
-    return firebaseService.auth.sendPasswordResetEmail(email).catch(error => {
-      const emailErrorCodes = [
-        'auth/email-already-in-use',
-        'auth/invalid-email',
-        'auth/operation-not-allowed',
-        'auth/user-not-found',
-        'auth/user-disabled'
-      ];
-      const response = [];
+    return firebaseService.auth
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        return dispatch(loginSuccess());
+      })
+      .catch(error => {
+        const emailErrorCodes = [
+          'auth/email-already-in-use',
+          'auth/invalid-email',
+          'auth/operation-not-allowed',
+          'auth/user-not-found',
+          'auth/user-disabled'
+        ];
+        const passwordErrorCodes = ['auth/weak-password', 'auth/wrong-password'];
+        const response = [];
 
-      if (emailErrorCodes.includes(error.code)) {
-        response.push({
-          type: 'email',
-          message: error.message
-        });
-      }
-      if (error.code === 'auth/invalid-api-key') {
-        dispatch(showMessage({ message: error.message }));
-      }
+        if (emailErrorCodes.includes(error.code)) {
+          response.push({
+            type: 'email',
+            message: error.message
+          });
+        }
 
-      return dispatch(loginError(response));
-    });
+        if (passwordErrorCodes.includes(error.code)) {
+          response.push({
+            type: 'password',
+            message: error.message
+          });
+        }
+
+        if (error.code === 'auth/invalid-api-key') {
+          dispatch(showMessage({ message: error.message }));
+        }
+
+        return dispatch(loginError(response));
+      });
   };
 
 const initialState = {
@@ -38,8 +70,8 @@ const initialState = {
   errors: []
 };
 
-const resetSlice = createSlice({
-  name: 'auth/reset',
+const loginSlice = createSlice({
+  name: 'auth/forgot',
   initialState,
   reducers: {
     loginSuccess: (state, action) => {
@@ -54,6 +86,6 @@ const resetSlice = createSlice({
   extraReducers: {}
 });
 
-export const { loginSuccess, loginError } = resetSlice.actions;
+export const { loginSuccess, loginError } = loginSlice.actions;
 
-export default resetSlice.reducer;
+export default loginSlice.reducer;
