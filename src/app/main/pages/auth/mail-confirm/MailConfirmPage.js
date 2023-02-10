@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
   root: {}
 }));
 
-function MailConfirmPage() {
+export function MailConfirmPage({ email }) {
   const classes = useStyles();
 
   return (
@@ -31,7 +31,7 @@ function MailConfirmPage() {
               </Typography>
 
               <Typography className="text-center mb-16 w-full" color="textSecondary">
-                A confirmation e-mail has been sent to <b>example@mymail.com</b>.
+                A confirmation e-mail has been sent to <b>{email}</b>.
               </Typography>
 
               <Typography className="text-center w-full" color="textSecondary">
