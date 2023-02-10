@@ -6,9 +6,11 @@ import CardContent from '@material-ui/core/CardContent';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import { resetWithFireBase } from 'app/auth/store/resetSlice';
 import clsx from 'clsx';
 import { motion } from 'framer-motion';
 import { Controller, useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 
@@ -22,13 +24,13 @@ const useStyles = makeStyles(theme => ({
 const schema = yup.object().shape({
   email: yup.string().email('You must enter a valid email').required('You must enter an email address')
 });
-
 const defaultValues = {
   email: ''
 };
 
 function ForgotPasswordPage() {
   const classes = useStyles();
+  const dispatch = useDispatch();
   const { control, formState, handleSubmit, reset } = useForm({
     mode: 'onChange',
     defaultValues,
@@ -37,7 +39,8 @@ function ForgotPasswordPage() {
 
   const { isValid, dirtyFields, errors } = formState;
 
-  function onSubmit() {
+  function onSubmit(model) {
+    dispatch(resetWithFireBase(model));
     reset(defaultValues);
   }
 
