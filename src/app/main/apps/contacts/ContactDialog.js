@@ -118,10 +118,10 @@
 //   /**
 //    * Remove Event
 //    */
-//   function handleRemove() {
-//     dispatch(removeContact(id));
-//     closeComposeDialog();
-//   }
+  // function handleRemove() {
+  //   dispatch(removeContact(id));
+  //   closeComposeDialog();
+  // }
 
 //   return (
 //     <Dialog
