@@ -3,59 +3,72 @@ import axios from 'axios';
 import { getUserData } from './userSlice';
 
 export const getVehicles = createAsyncThunk(
-  'vehicle-list-app/vehicles/getContacts',
-  async (routeParams, { getState }) => {
-    routeParams = routeParams || getState().contactsApp.contacts.routeParams;
-    const response = await axios.get('/api/vehicle-list-app/vehicles', {
-      params: routeParams
+  'vehicle-list-app/vehicles/getVehicles',
+  // async (routeParams, { getState }) => {
+  async () => {
+    // routeParams = routeParams || getState().contactsApp.contacts.routeParams;
+    // const response = await axios.get('/api/vehicle-list-app/vehicles', {
+    const response = await axios.get('https://cargofleet-api.fly.dev/team1/api/vehicles?page=1&limit=100', {
+      // params: routeParams
     });
-    const data = await response.data;
+    const data = await response.data.data;
+    // console.log(data);
 
-    return { data, routeParams };
+    // return { data, routeParams };
+    return { data };
   }
 );
 
-// export const addContact = createAsyncThunk(
-//   'contactsApp/contacts/addContact',
-//   async (contact, { dispatch, getState }) => {
-//     const response = await axios.post('/api/contacts-app/add-contact', { contact });
-//     const data = await response.data;
+export const addContact = createAsyncThunk(
+  'contactsApp/contacts/addContact',
+  async (contact, { dispatch, getState }) => {
+    const response = await axios.post('https://cargofleet-api.fly.dev/team1/api/vehicles', {
+      contact
+    });
+    const data = await response.data.data;
 
-//     dispatch(getContacts());
+    dispatch(getVehicles());
+    // dispatch(getContacts());
 
-//     return data;
-//   }
-// );
+    return data;
+  }
+);
 
-// export const updateContact = createAsyncThunk(
-//   'contactsApp/contacts/updateContact',
-//   async (contact, { dispatch, getState }) => {
-//     const response = await axios.post('/api/contacts-app/update-contact', { contact });
-//     const data = await response.data;
+export const updateContact = createAsyncThunk(
+  'vehicle-list-app/vehicles/updateVehicle',
+  async (contact, { dispatch, getState }) => {
+    const response = await axios.post(`https://cargofleet-api.fly.dev/team1/api/vehicles`, { contact });
+    const data = await response.data.data;
 
-//     dispatch(getContacts());
+    dispatch(getVehicles());
 
-//     return data;
-//   }
-// );
+    return data;
+  }
+);
 
-// export const removeContact = createAsyncThunk(
-//   'contactsApp/contacts/removeContact',
-//   async (contactId, { dispatch, getState }) => {
-//     await axios.post('/api/contacts-app/remove-contact', { contactId });
+export const removeContact = createAsyncThunk(
+  'vehicle-list-app/vehicles/removeVehicle',
+  // async (contactId, { dispatch, getState }) => {
+  async (contactId, { dispatch, getState }) => {
+    console.log('delete:', contactId);
+    // const response = await axios.post('https://cargofleet-api.fly.dev/team1/api/vehicles', { contactId });
+    const response = await axios.delete(`https://cargofleet-api.fly.dev/team1/api/vehicles/${contactId}`);
+    // const response = await axios.delete(`https://cargofleet-api.fly.dev/team1/api/vehicles/`, { contactId });
+    const data = await response.data.data;
+    dispatch(getVehicles());
+    // return contactId;
+    return { data };
+  }
+);
 
-//     return contactId;
-//   }
-// );
+export const removeContacts = createAsyncThunk(
+  'contactsApp/contacts/removeContacts',
+  async (contactIds, { dispatch, getState }) => {
+    await axios.post('/api/contacts-app/remove-contacts', { contactIds });
 
-// export const removeContacts = createAsyncThunk(
-//   'contactsApp/contacts/removeContacts',
-//   async (contactIds, { dispatch, getState }) => {
-//     await axios.post('/api/contacts-app/remove-contacts', { contactIds });
-
-//     return contactIds;
-//   }
-// );
+    return contactIds;
+  }
+);
 
 // export const toggleStarredContact = createAsyncThunk(
 //   'contactsApp/contacts/toggleStarredContact',
@@ -65,7 +78,7 @@ export const getVehicles = createAsyncThunk(
 
 //     dispatch(getUserData());
 
-//     dispatch(getContacts());
+//     dispatch(getVehicles());
 
 //     return data;
 //   }
@@ -79,7 +92,7 @@ export const getVehicles = createAsyncThunk(
 
 //     dispatch(getUserData());
 
-//     dispatch(getContacts());
+//     dispatch(getVehicles());
 
 //     return data;
 //   }
@@ -93,7 +106,7 @@ export const getVehicles = createAsyncThunk(
 
 //     dispatch(getUserData());
 
-//     dispatch(getContacts());
+//     dispatch(getVehicles());
 
 //     return data;
 //   }
@@ -107,7 +120,7 @@ export const getVehicles = createAsyncThunk(
 
 //     dispatch(getUserData());
 
-//     dispatch(getContacts());
+//     dispatch(getVehicles());
 
 //     return data;
 //   }
@@ -177,10 +190,10 @@ const contactsSlice = createSlice({
     }
   },
   extraReducers: {
-    // [updateContact.fulfilled]: contactsAdapter.upsertOne,
-    // [addContact.fulfilled]: contactsAdapter.addOne,
-    // [removeContacts.fulfilled]: (state, action) => contactsAdapter.removeMany(state, action.payload),
-    // [removeContact.fulfilled]: (state, action) => contactsAdapter.removeOne(state, action.payload),
+    [updateContact.fulfilled]: contactsAdapter.upsertOne,
+    [addContact.fulfilled]: contactsAdapter.addOne,
+    [removeContacts.fulfilled]: (state, action) => contactsAdapter.removeMany(state, action.payload),
+    [removeContact.fulfilled]: (state, action) => contactsAdapter.removeOne(state, action.payload),
     [getVehicles.fulfilled]: (state, action) => {
       const { data, routeParams } = action.payload;
       contactsAdapter.setAll(state, data);

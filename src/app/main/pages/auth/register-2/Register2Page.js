@@ -100,7 +100,7 @@ function Register2Page() {
             onSubmit={handleSubmit(onSubmit)}
           >
             <Controller
-              name="name"
+              name="Vehicle Brand"
               control={control}
               render={({ field }) => (
                 <TextField

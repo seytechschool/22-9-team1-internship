@@ -157,7 +157,7 @@ import 'fontsource-roboto';
 
       <FuseHighlight component="pre" className="language-js">
         {` 
-const theme = createMuiTheme({
+const theme = createTheme({
   props: {
     MuiTypography: {
       variantMapping: {

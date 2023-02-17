@@ -4,13 +4,13 @@ import { useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useDeepCompareEffect } from '@fuse/hooks';
-// import ContactDialog from './ContactDialog';
+import ContactDialog from './ContactDialog';
 import ContactsHeader from './ContactsHeader';
 import ContactsList from './ContactsList';
-// import ContactsSidebarContent from './ContactsSidebarContent';
+import ContactsSidebarContent from './ContactsSidebarContent';
 import reducer from './store';
 import { getVehicles } from './store/contactsSlice';
-// import { getUserData } from './store/userSlice';
+import { getUserData } from './store/userSlice';
 
 function ContactsApp(props) {
   const dispatch = useDispatch();
@@ -20,7 +20,7 @@ function ContactsApp(props) {
 
   useDeepCompareEffect(() => {
     dispatch(getVehicles(routeParams));
-    // dispatch(getUserData());
+    dispatch(getUserData());
   }, [dispatch, routeParams]);
 
   return (
@@ -40,7 +40,7 @@ function ContactsApp(props) {
         ref={pageLayout}
         innerScroll
       />
-      {/* <ContactDialog /> */}
+      <ContactDialog />
     </>
   );
 }

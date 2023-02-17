@@ -6,19 +6,29 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { useMemo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button } from '@material-ui/core';
 import ContactsMultiSelectMenu from './ContactsMultiSelectMenu';
 import ContactsTable from './ContactsTable';
-// import { openEditContactDialog, removeContact, toggleStarredContact, selectContacts } from './store/contactsSlice';
-import { openEditContactDialog, selectContacts } from './store/contactsSlice';
+import {
+  openEditContactDialog,
+  removeContact,
+  // toggleStarredContact,
+  selectContacts,
+  updateContact
+} from './store/contactsSlice';
 
 const formatData = vehicles =>
   vehicles.map(vehicle => {
-    const totalCost = `$${(vehicle.serviceCost + vehicle.fuelCost).toLocaleString()}`;
+    // const totalCost = `$${(vehicle.serviceCost + vehicle.fuelCost).toLocaleString()}`;
+    // const fullName = `${vehicle.driver.last_name} ${vehicle.driver.first_name}`;
+
     return {
       ...vehicle,
-      isAssigned: vehicle.isAssigned ? 'YES' : 'NO',
-      totalCost,
-      millage: vehicle.millage.toLocaleString()
+      // isAssigned: vehicle.isAssigned ? 'YES' : 'NO',
+      // isAssigned: vehicle.active ? 'YES' : 'NO',
+      fullName: vehicle.driver ? `${vehicle.driver.first_name} ${vehicle.driver.last_name}` : ''
+      // totalCost,
+      // millage: vehicle.millage.toLocaleString()
     };
   });
 
@@ -26,12 +36,38 @@ function ContactsList(props) {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
   const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText);
-  // const user = useSelector(({ contactsApp }) => contactsApp.user);
+  const user = useSelector(({ contactsApp }) => contactsApp.user);
 
   const [filteredData, setFilteredData] = useState(null);
 
   const columns = useMemo(
     () => [
+      {
+        id: 'assign',
+        Header: 'Assign/Unassign',
+        accessor: 'isAssigned',
+        width: 128,
+        sortable: false,
+        Cell: ({ row }) => (
+          <div>
+            <Button
+              onClick={ev => {
+                ev.stopPropagation();
+                // dispatch(removeContact(row.original.id));
+              }}
+              variant="outlined"
+              color="primary"
+            >
+              Assign/Unassign
+            </Button>
+          </div>
+        )
+      },
+      // {
+      //   // Header: 'Assigned Status',
+
+      //   sortable: true
+      // },
       // {
       //   Header: ({ selectedFlatRows }) => {
       //     const selectedRowIds = selectedFlatRows.map(row => row.original.id);
@@ -47,78 +83,67 @@ function ContactsList(props) {
       //   sortable: false
       // },
       {
-        Header: 'Brand',
+        Header: 'Vehicle Brand',
         accessor: 'brand',
         className: 'font-medium',
         sortable: true
       },
       {
-        Header: 'Model',
+        Header: 'Vehicle Model',
         accessor: 'model',
         className: 'font-medium',
         sortable: true
       },
-      // TODO: add Production Year
-      // {
-      //   Header: 'Production Year',
-      //   accessor: 'year',
-      //   sortable: true
-      // },
       {
         Header: 'Plate Number',
-        accessor: 'plateNumber',
+        accessor: 'plate_number',
         sortable: true
       },
       {
-        Header: 'Assigned Status',
-        accessor: 'isAssigned',
+        Header: 'Driver',
+        accessor: 'fullName',
         sortable: true
       },
-      {
-        Header: 'Vehicle Status',
-        accessor: 'vehicleStatus',
-        sortable: true
-      },
-      {
-        Header: 'Total Cost',
-        accessor: 'totalCost',
-        sortable: true
-      },
-      {
-        Header: 'Millage',
-        accessor: 'millage',
-        sortable: true
-      }
 
-      // {
-      //   id: 'action',
-      //   width: 128,
-      //   sortable: false,
-      //   Cell: ({ row }) => (
-      //     <div className="flex items-center">
-      //       <IconButton
-      //         onClick={ev => {
-      //           ev.stopPropagation();
-      //           dispatch(toggleStarredContact(row.original.id));
-      //         }}
-      //       >
-      //         {user.starred && user.starred.includes(row.original.id) ? (
-      //           <Icon className="text-yellow-700">star</Icon>
-      //         ) : (
-      //           <Icon>star_border</Icon>
-      //         )}
-      //       </IconButton>
-      //       {/* <IconButton
-      //         onClick={ev => {
-      //           ev.stopPropagation();
-      //           dispatch(removeContact(row.original.id));
-      //         }}
-      //       >
-      //         <Icon>delete</Icon>
-      //       </IconButton> */}
-      //     </div>
-      //   )
-      // }
+      {
+        id: 'action',
+        width: 128,
+        sortable: false,
+        Cell: ({ row }) => (
+          <div className="flex items-center">
+            {/* <IconButton
+              onClick={ev => {
+                ev.stopPropagation();
+                dispatch(toggleStarredContact(row.original.id));
+              }}
+            >
+              {user.starred && user.starred.includes(row.original.id) ? (
+                <Icon className="text-yellow-700">star</Icon>
+              ) : (
+                <Icon>star</Icon>
+              )}
+            </IconButton> */}
+            <IconButton
+              onClick={ev => {
+                ev.stopPropagation();
+                dispatch(openEditContactDialog(row.original.id));
+              }}
+            >
+              <Icon>edit</Icon>
+            </IconButton>
+
+            <IconButton
+              onClick={ev => {
+                ev.stopPropagation();
+                dispatch(removeContact(row.original.id));
+                // console.log(row.original.id);
+              }}
+            >
+              <Icon>delete</Icon>
+            </IconButton>
+          </div>
+        )
+      }
     ],
     // eslint-disable-next-line
     [dispatch, contacts]
@@ -158,11 +183,11 @@ function ContactsList(props) {
       <ContactsTable
         columns={columns}
         data={formattedData}
-        // onRowClick={(ev, row) => {
-        //   if (row) {
-        //     dispatch(openEditContactDialog(row.original));
-        //   }
-        // }}
+        onRowClick={(ev, row) => {
+          // if (row) {
+          //   dispatch(openEditContactDialog(row.original));
+          // }
+        }}
       />
     </motion.div>
   );
