@@ -9,13 +9,19 @@ import Typography from '@material-ui/core/Typography';
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMainTheme } from 'app/store/fuse/settingsSlice';
-import { setContactsSearchText } from './store/contactsSlice';
+// import { useNavigate } from 'react-router-dom';
+import { addContact, openEditContactDialog, openNewContactDialog, setContactsSearchText } from './store/contactsSlice';
 
 function ContactsHeader(props) {
   const dispatch = useDispatch();
   const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText);
   const mainTheme = useSelector(selectMainTheme);
 
+  // const navigate = useNavigate();
+
+  // const navigateHandler = () => {
+  //   navigate('./contact-sidebar-content');
+  // };
   return (
     <div className="flex flex-1 items-center justify-between p-4 sm:p-24">
       <div className="flex flex-shrink items-center sm:w-224">
@@ -50,7 +56,9 @@ function ContactsHeader(props) {
           </Typography>
         </div>
       </div>
-      <Button variant="contained">Add New</Button>
+      <Button variant="contained" onClick={() => dispatch(openNewContactDialog())}>
+        Add New
+      </Button>
 
       <div className="flex flex-1 items-center justify-center px-8 sm:px-12">
         <ThemeProvider theme={mainTheme}>

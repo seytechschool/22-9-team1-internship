@@ -6,9 +6,16 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { useMemo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button } from '@material-ui/core';
 import ContactsMultiSelectMenu from './ContactsMultiSelectMenu';
 import ContactsTable from './ContactsTable';
-import { openEditContactDialog, removeContact, toggleStarredContact, selectContacts } from './store/contactsSlice';
+import {
+  openEditContactDialog,
+  removeContact,
+  // toggleStarredContact,
+  selectContacts,
+  updateContact
+} from './store/contactsSlice';
 
 const formatData = vehicles =>
   vehicles.map(vehicle => {
@@ -18,7 +25,7 @@ const formatData = vehicles =>
     return {
       ...vehicle,
       // isAssigned: vehicle.isAssigned ? 'YES' : 'NO',
-      isAssigned: vehicle.active ? 'YES' : 'NO',
+      // isAssigned: vehicle.active ? 'YES' : 'NO',
       fullName: vehicle.driver ? `${vehicle.driver.first_name} ${vehicle.driver.last_name}` : ''
       // totalCost,
       // millage: vehicle.millage.toLocaleString()
@@ -36,11 +43,31 @@ function ContactsList(props) {
   const columns = useMemo(
     () => [
       {
-        // Header: 'Assigned Status',
+        id: 'assign',
         Header: 'Assign/Unassign',
         accessor: 'isAssigned',
-        sortable: true
+        width: 128,
+        sortable: false,
+        Cell: ({ row }) => (
+          <div>
+            <Button
+              onClick={ev => {
+                ev.stopPropagation();
+                // dispatch(removeContact(row.original.id));
+              }}
+              variant="outlined"
+              color="primary"
+            >
+              Assign/Unassign
+            </Button>
+          </div>
+        )
       },
+      // {
+      //   // Header: 'Assigned Status',
+
+      //   sortable: true
+      // },
       // {
       //   Header: ({ selectedFlatRows }) => {
       //     const selectedRowIds = selectedFlatRows.map(row => row.original.id);
@@ -67,32 +94,11 @@ function ContactsList(props) {
         className: 'font-medium',
         sortable: true
       },
-      // TODO: add Production Year
-      // {
-      //   Header: 'Production Year',
-      //   accessor: 'year',
-      //   sortable: true
-      // },
       {
         Header: 'Plate Number',
         accessor: 'plate_number',
         sortable: true
       },
-      // {
-      //   Header: 'Vehicle Status',
-      //   accessor: 'vehicleStatus',
-      //   sortable: true
-      // },
-      // {
-      //   Header: 'Total Cost',
-      //   accessor: 'totalCost',
-      //   sortable: true
-      // },
-      // {
-      //   Header: 'Millage',
-      //   accessor: 'millage',
-      //   sortable: true
-      // }
       {
         Header: 'Driver',
         accessor: 'fullName',
@@ -105,7 +111,7 @@ function ContactsList(props) {
         sortable: false,
         Cell: ({ row }) => (
           <div className="flex items-center">
-            <IconButton
+            {/* <IconButton
               onClick={ev => {
                 ev.stopPropagation();
                 dispatch(toggleStarredContact(row.original.id));
@@ -114,13 +120,23 @@ function ContactsList(props) {
               {user.starred && user.starred.includes(row.original.id) ? (
                 <Icon className="text-yellow-700">star</Icon>
               ) : (
-                <Icon>star_border</Icon>
+                <Icon>star</Icon>
               )}
+            </IconButton> */}
+            <IconButton
+              onClick={ev => {
+                ev.stopPropagation();
+                dispatch(openEditContactDialog(row.original.id));
+              }}
+            >
+              <Icon>edit</Icon>
             </IconButton>
+
             <IconButton
               onClick={ev => {
                 ev.stopPropagation();
                 dispatch(removeContact(row.original.id));
+                // console.log(row.original.id);
               }}
             >
               <Icon>delete</Icon>
@@ -167,11 +183,11 @@ function ContactsList(props) {
       <ContactsTable
         columns={columns}
         data={formattedData}
-        // onRowClick={(ev, row) => {
-        //   if (row) {
-        //     dispatch(openEditContactDialog(row.original));
-        //   }
-        // }}
+        onRowClick={(ev, row) => {
+          // if (row) {
+          //   dispatch(openEditContactDialog(row.original));
+          // }
+        }}
       />
     </motion.div>
   );

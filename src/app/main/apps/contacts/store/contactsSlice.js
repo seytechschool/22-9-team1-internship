@@ -3,50 +3,61 @@ import axios from 'axios';
 import { getUserData } from './userSlice';
 
 export const getVehicles = createAsyncThunk(
-  'vehicle-list-app/vehicles/getContacts',
-  async (routeParams, { getState }) => {
-    routeParams = routeParams || getState().contactsApp.contacts.routeParams;
+  'vehicle-list-app/vehicles/getVehicles',
+  // async (routeParams, { getState }) => {
+  async () => {
+    // routeParams = routeParams || getState().contactsApp.contacts.routeParams;
     // const response = await axios.get('/api/vehicle-list-app/vehicles', {
     const response = await axios.get('https://cargofleet-api.fly.dev/team1/api/vehicles?page=1&limit=100', {
-      params: routeParams
+      // params: routeParams
     });
     const data = await response.data.data;
-    console.log(data);
+    // console.log(data);
 
-    return { data, routeParams };
+    // return { data, routeParams };
+    return { data };
   }
 );
 
 export const addContact = createAsyncThunk(
   'contactsApp/contacts/addContact',
   async (contact, { dispatch, getState }) => {
-    const response = await axios.post('/api/contacts-app/add-contact', { contact });
-    const data = await response.data;
+    const response = await axios.post('https://cargofleet-api.fly.dev/team1/api/vehicles', {
+      contact
+    });
+    const data = await response.data.data;
 
-    dispatch(getContacts());
+    dispatch(getVehicles());
+    // dispatch(getContacts());
 
     return data;
   }
 );
 
 export const updateContact = createAsyncThunk(
-  'contactsApp/contacts/updateContact',
+  'vehicle-list-app/vehicles/updateVehicle',
   async (contact, { dispatch, getState }) => {
-    const response = await axios.post('/api/contacts-app/update-contact', { contact });
-    const data = await response.data;
+    const response = await axios.post(`https://cargofleet-api.fly.dev/team1/api/vehicles`, { contact });
+    const data = await response.data.data;
 
-    dispatch(getContacts());
+    dispatch(getVehicles());
 
     return data;
   }
 );
 
 export const removeContact = createAsyncThunk(
-  'contactsApp/contacts/removeContact',
+  'vehicle-list-app/vehicles/removeVehicle',
+  // async (contactId, { dispatch, getState }) => {
   async (contactId, { dispatch, getState }) => {
-    await axios.post('/api/contacts-app/remove-contact', { contactId });
-
-    return contactId;
+    console.log('delete:', contactId);
+    // const response = await axios.post('https://cargofleet-api.fly.dev/team1/api/vehicles', { contactId });
+    const response = await axios.delete(`https://cargofleet-api.fly.dev/team1/api/vehicles/${contactId}`);
+    // const response = await axios.delete(`https://cargofleet-api.fly.dev/team1/api/vehicles/`, { contactId });
+    const data = await response.data.data;
+    dispatch(getVehicles());
+    // return contactId;
+    return { data };
   }
 );
 
@@ -59,61 +70,61 @@ export const removeContacts = createAsyncThunk(
   }
 );
 
-export const toggleStarredContact = createAsyncThunk(
-  'contactsApp/contacts/toggleStarredContact',
-  async (contactId, { dispatch, getState }) => {
-    const response = await axios.post('/api/contacts-app/toggle-starred-contact', { contactId });
-    const data = await response.data;
+// export const toggleStarredContact = createAsyncThunk(
+//   'contactsApp/contacts/toggleStarredContact',
+//   async (contactId, { dispatch, getState }) => {
+//     const response = await axios.post('/api/contacts-app/toggle-starred-contact', { contactId });
+//     const data = await response.data;
 
-    dispatch(getUserData());
+//     dispatch(getUserData());
 
-    dispatch(getContacts());
+//     dispatch(getVehicles());
 
-    return data;
-  }
-);
+//     return data;
+//   }
+// );
 
-export const toggleStarredContacts = createAsyncThunk(
-  'contactsApp/contacts/toggleStarredContacts',
-  async (contactIds, { dispatch, getState }) => {
-    const response = await axios.post('/api/contacts-app/toggle-starred-contacts', { contactIds });
-    const data = await response.data;
+// export const toggleStarredContacts = createAsyncThunk(
+//   'contactsApp/contacts/toggleStarredContacts',
+//   async (contactIds, { dispatch, getState }) => {
+//     const response = await axios.post('/api/contacts-app/toggle-starred-contacts', { contactIds });
+//     const data = await response.data;
 
-    dispatch(getUserData());
+//     dispatch(getUserData());
 
-    dispatch(getContacts());
+//     dispatch(getVehicles());
 
-    return data;
-  }
-);
+//     return data;
+//   }
+// );
 
-export const setContactsStarred = createAsyncThunk(
-  'contactsApp/contacts/setContactsStarred',
-  async (contactIds, { dispatch, getState }) => {
-    const response = await axios.post('/api/contacts-app/set-contacts-starred', { contactIds });
-    const data = await response.data;
+// export const setContactsStarred = createAsyncThunk(
+//   'contactsApp/contacts/setContactsStarred',
+//   async (contactIds, { dispatch, getState }) => {
+//     const response = await axios.post('/api/contacts-app/set-contacts-starred', { contactIds });
+//     const data = await response.data;
 
-    dispatch(getUserData());
+//     dispatch(getUserData());
 
-    dispatch(getContacts());
+//     dispatch(getVehicles());
 
-    return data;
-  }
-);
+//     return data;
+//   }
+// );
 
-export const setContactsUnstarred = createAsyncThunk(
-  'contactsApp/contacts/setContactsUnstarred',
-  async (contactIds, { dispatch, getState }) => {
-    const response = await axios.post('/api/contacts-app/set-contacts-unstarred', { contactIds });
-    const data = await response.data;
+// export const setContactsUnstarred = createAsyncThunk(
+//   'contactsApp/contacts/setContactsUnstarred',
+//   async (contactIds, { dispatch, getState }) => {
+//     const response = await axios.post('/api/contacts-app/set-contacts-unstarred', { contactIds });
+//     const data = await response.data;
 
-    dispatch(getUserData());
+//     dispatch(getUserData());
 
-    dispatch(getContacts());
+//     dispatch(getVehicles());
 
-    return data;
-  }
-);
+//     return data;
+//   }
+// );
 
 const contactsAdapter = createEntityAdapter({});
 

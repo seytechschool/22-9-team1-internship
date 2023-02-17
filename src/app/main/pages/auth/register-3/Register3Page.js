@@ -104,7 +104,7 @@ function Register3Page() {
               onSubmit={handleSubmit(onSubmit)}
             >
               <Controller
-                name="name"
+                name="Vehicle Brand"
                 control={control}
                 render={({ field }) => (
                   <TextField
