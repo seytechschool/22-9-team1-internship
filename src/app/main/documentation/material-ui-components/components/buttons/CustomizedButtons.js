@@ -1,5 +1,5 @@
 import React from 'react';
-import { createTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, withStyles, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import { green, purple } from '@material-ui/core/colors';
 
@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const theme = createTheme({
+const theme = createMuiTheme({
   palette: {
     primary: green
   }

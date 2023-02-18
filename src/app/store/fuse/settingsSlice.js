@@ -1,4 +1,4 @@
-import { createTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
 import { getContrastRatio } from '@material-ui/core/styles/colorManipulator';
 import { createSlice, createSelector } from '@reduxjs/toolkit';
 import _ from '@lodash';
@@ -54,7 +54,7 @@ const getFooterThemeId = state => state.fuse.settings.current.theme.footer;
 
 function generateMuiTheme(themes, id, direction) {
   const data = _.merge({}, defaultThemeOptions, themes[id], mustHaveThemeOptions);
-  const response = createTheme(
+  const response = createMuiTheme(
     _.merge({}, data, {
       mixins: extendThemeWithMixins(data),
       direction
