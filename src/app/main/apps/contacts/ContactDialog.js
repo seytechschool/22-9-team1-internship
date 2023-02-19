@@ -16,6 +16,8 @@ import Typography from '@material-ui/core/Typography';
 import { useCallback, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { MenuItem } from '@material-ui/core';
+
 
 import _ from '@lodash';
 import * as yup from 'yup';
@@ -216,24 +218,32 @@ function ContactDialog(props) {
               <Icon color="action">star</Icon>
             </div> */}
             <Controller
-              control={control}
-              name="yearOfManufacture"
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  id="yearOfManufacture"
-                  variant="outlined"
-                  type="number"
-                  label="Year Of Manufacture"
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  placeholder="2016"
-                  fullWidth
-                />
-              )}
-            />
+            control={control}
+            name="yearOfManufacture"
+            render={({ field }) => (
+            <TextField
+            {...field}
+            className="mb-24"
+            id="yearOfManufacture"
+            variant="outlined"
+            type="text"
+            label="Year Of Manufacture"
+            InputLabelProps={{
+             shrink: true
+              }}
+            select
+            fullWidth
+            >
+            {Array.from(new Array(13), (menuItem, index) => 2010 + index).map((option) => (
+          <MenuItem key={option} value={option}>
+          {option}
+           </MenuItem>
+          ))}
+            </TextField>
+  )}
+/>
+
+
           </div>
 
           <div className="flex">
