@@ -22,7 +22,7 @@ import * as yup from 'yup';
 
 import {
   removeContact,
-  updateContact,
+  updateVehicle,
   addContact,
   closeNewContactDialog,
   closeEditContactDialog
@@ -140,7 +140,7 @@ function ContactDialog(props) {
     if (contactDialog.type === 'new') {
       dispatch(addContact(data));
     } else {
-      dispatch(updateContact({ ...contactDialog.data, ...data }));
+      dispatch(updateVehicle({ ...contactDialog.data, ...data }));
     }
     closeComposeDialog();
   }
@@ -266,7 +266,7 @@ function ContactDialog(props) {
                   {...field}
                   className="mb-24"
                   label="Vehicle Image"
-                  id="vehicleImage"
+                  id="image_url"
                   variant="outlined"
                   fullWidth
                 />
@@ -298,8 +298,8 @@ function ContactDialog(props) {
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Engine Number"
-                  id="engine_number"
+                  label="Fuel Type"
+                  id="fuel_type"
                   variant="outlined"
                   fullWidth
                 />
