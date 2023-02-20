@@ -45,6 +45,7 @@ export const updateContact = createAsyncThunk(
       dispatch(
         addNotification(NotificationModel({ message: 'Vehicle has been updated', options: { variant: 'success' } }))
       );
+      console.log(vehicle.id, vehicle)
       dispatch(getVehicles());
       return data;
     }
@@ -201,7 +202,7 @@ const contactsSlice = createSlice({
     }
   },
   extraReducers: {
-    [updateContact.fulfilled]: contactsAdapter.upsertOne,
+    // [updateContact.fulfilled]: contactsAdapter.upsertOne,
     [addContact.fulfilled]: contactsAdapter.addOne,
     [removeContacts.fulfilled]: (state, action) => contactsAdapter.removeMany(state, action.payload),
     [removeContact.fulfilled]: (state, action) => contactsAdapter.removeOne(state, action.payload),
