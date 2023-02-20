@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
+import { addNotification } from 'app/fuse-layouts/shared-components/notificationPanel/store/dataSlice';
+import NotificationModel from 'app/fuse-layouts/shared-components/notificationPanel/model/NotificationModel';
 import axios from 'axios';
 import { getUserData } from './userSlice';
 
@@ -36,13 +38,22 @@ export const addContact = createAsyncThunk(
 
 export const updateContact = createAsyncThunk(
   'vehicle-list-app/vehicles/updateVehicle',
-  async (contact, { dispatch, getState }) => {
-    const response = await axios.post(`https://cargofleet-api.fly.dev/team1/api/vehicles`, { contact });
-    const data = await response.data.data;
-
-    dispatch(getVehicles());
-
-    return data;
+  async (vehicle, { dispatch, getState }) => {
+    try{
+      const response = await axios.put(`https://cargofleet-api.fly.dev/team1/api/vehicles/${vehicle.id}`, vehicle );
+      const data = await response.data.data;
+      dispatch(
+        addNotification(NotificationModel({ message: 'Vehicle has been updated', options: { variant: 'success' } }))
+      );
+      dispatch(getVehicles());
+      return data;
+    }
+    catch(error){
+      dispatch(
+        addNotification(NotificationModel({ message: "Data has been updated", options:{ variant: "error" }}))
+      )
+      return error.message
+    }
   }
 );
 
