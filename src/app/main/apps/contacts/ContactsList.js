@@ -15,7 +15,6 @@ import {
   removeContact,
   // toggleStarredContact,
   selectContacts,
-  updateContact
 } from './store/contactsSlice';
 
 const formatData = vehicles =>

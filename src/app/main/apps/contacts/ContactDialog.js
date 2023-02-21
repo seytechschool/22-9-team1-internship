@@ -67,14 +67,14 @@ const defaultValues = {
 //  */
 const schema = yup.object().shape({
   brand: yup.string().required('You must enter a brand'),
-  model: yup.string().required('You must enter a model'),
-  manufacture_year: yup.string().required('You must enter a year'),
-  color: yup.string().required('You must enter a color'),
-  image_url: yup.string().required('You must enter a image url'),
-  plate_number: yup.string().required('You must enter a plate number'),
-  engine_number: yup.string().required('You must enter a engine number'),
-  fuel_type: yup.string().required('You must enter a fuel type'),
-  active: yup.string().required('You must enter a active'),
+  // model: yup.string().required('You must enter a model'),
+  // manufacture_year: yup.string().required('You must enter a year'),
+  // color: yup.string().required('You must enter a color'),
+  // image_url: yup.string().required('You must enter a image url'),
+  // plate_number: yup.string().required('You must enter a plate number'),
+  // engine_number: yup.string().required('You must enter a engine number'),
+  // fuel_type: yup.string().required('You must enter a fuel type'),
+  // active: yup.string().required('You must enter a active'),
 });
 
 function ContactDialog(props) {
