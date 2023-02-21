@@ -2,20 +2,14 @@ import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/too
 import axios from 'axios';
 
 export const getDrivers = createAsyncThunk(
-    'drivers-list-app/drivers/getDrivers',
-    // async (routeParams, { getState }) => {
-    async () => {
-      // routeParams = routeParams || getState().contactsApp.contacts.routeParams;
-      // const response = await axios.get('/api/vehicle-list-app/vehicles', {
-      const response = await axios.get('https://cargofleet-api.fly.dev/team1/api/drivers', {
-        // params: routeParams
-      });
-      const data = await response.data.data;
-      console.log(data);
-  
-      // return { data, routeParams };
-      return { data };
-    }
+  'driversApp/drivers/getDrivers',
+  async (routeParams, { getState }) => {
+    routeParams = routeParams || getState().contactsApp.contacts.routeParams;
+    const response = await axios.get('https://cargofleet-api.fly.dev/team1/api/drivers');
+    const data = await response.data;
+    console.log({ data, routeParams })
+    return { data, routeParams };
+  }
   );
   
 
@@ -33,11 +27,10 @@ const driversSlice = createSlice({
   reducers: {},
   extraReducers: {
     [getDrivers.fulfilled]: (state, action) => {
-        const { data, routeParams } = action.payload;
-        driversAdapter.setAll(state, data);
-        state.routeParams = routeParams;
-        // state.searchText = '';
-      }
+      const { data } = action.payload;
+      driversAdapter.setAll(state, data);
+      // state.searchText = '';
+    }
   }
 });
 

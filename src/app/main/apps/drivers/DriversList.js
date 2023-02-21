@@ -14,8 +14,8 @@ import { selectDrivers } from './store/driversSlice';
 function DriversList(props) {
     // const drivers = useSelector(selectDrivers)
     // useEffect(()=>{
-    //     console.log(drivers)
-    // },[drivers])
+        // console.log(useSelector(selectDrivers))
+    // },[])
   
   return (
     <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1, transition: { delay: 0.2 } }}>
