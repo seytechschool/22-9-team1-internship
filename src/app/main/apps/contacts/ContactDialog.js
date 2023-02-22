@@ -22,7 +22,7 @@ import * as yup from 'yup';
 
 import {
   removeContact,
-  updateContact,
+  updateVehicle,
   addContact,
   closeNewContactDialog,
   closeEditContactDialog
@@ -66,7 +66,15 @@ const defaultValues = {
 //  * Form Validation Schema
 //  */
 const schema = yup.object().shape({
-  name: yup.string().required('You must enter a name')
+  brand: yup.string().required('You must enter a brand'),
+  // model: yup.string().required('You must enter a model'),
+  // manufacture_year: yup.string().required('You must enter a year'),
+  // color: yup.string().required('You must enter a color'),
+  // image_url: yup.string().required('You must enter a image url'),
+  // plate_number: yup.string().required('You must enter a plate number'),
+  // engine_number: yup.string().required('You must enter a engine number'),
+  // fuel_type: yup.string().required('You must enter a fuel type'),
+  // active: yup.string().required('You must enter a active'),
 });
 
 function ContactDialog(props) {
@@ -83,7 +91,7 @@ function ContactDialog(props) {
 
   const id = watch('id');
   // const name = watch('name');
-  const vehicleBrand = watch('Vehicle Brand');
+  const vehicleBrand = watch('brand');
   // const avatar = watch('avatar');
 
   //   /**
@@ -132,7 +140,7 @@ function ContactDialog(props) {
     if (contactDialog.type === 'new') {
       dispatch(addContact(data));
     } else {
-      dispatch(updateContact({ ...contactDialog.data, ...data }));
+      dispatch(updateVehicle({ ...contactDialog.data, ...data }));
     }
     closeComposeDialog();
   }
@@ -154,9 +162,9 @@ function ContactDialog(props) {
         paper: 'm-24'
       }}
       {...contactDialog.props}
-      // onClose={closeComposeDialog}
+      onClose={closeComposeDialog}
       fullWidth
-      minWidth="xs"
+      minwidth="xs"
     >
       <AppBar position="static" elevation={0}>
         <Toolbar className="flex w-full">
@@ -182,7 +190,7 @@ function ContactDialog(props) {
             {/* </div> */}
             <Controller
               control={control}
-              name="Vehicle Brand"
+              name="brand"
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -217,12 +225,12 @@ function ContactDialog(props) {
             </div> */}
             <Controller
               control={control}
-              name="yearOfManufacture"
+              name="manufacture_year"
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
-                  id="yearOfManufacture"
+                  id="manufacture_year"
                   variant="outlined"
                   type="number"
                   label="Year Of Manufacture"
@@ -252,13 +260,13 @@ function ContactDialog(props) {
           <div className="flex">
             <Controller
               control={control}
-              name="vehicleImage"
+              name="image_url"
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
                   label="Vehicle Image"
-                  id="vehicleImage"
+                  id="image_url"
                   variant="outlined"
                   fullWidth
                 />
@@ -269,13 +277,29 @@ function ContactDialog(props) {
           <div className="flex">
             <Controller
               control={control}
-              name="engineNumber"
+              name="engine_number"
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
                   label="Engine Number"
-                  id="engineNumber"
+                  id="engine_number"
+                  variant="outlined"
+                  fullWidth
+                />
+              )}
+            />
+          </div>
+          <div className="flex">
+            <Controller
+              control={control}
+              name="fuel_type"
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Fuel Type"
+                  id="fuel_type"
                   variant="outlined"
                   fullWidth
                 />
@@ -283,7 +307,9 @@ function ContactDialog(props) {
             />
           </div>
 
-          <div
+
+
+          {/* <div
             style={{
               color: 'hsl(0, 0%, 40%)',
               display: 'inline-block',
@@ -291,9 +317,9 @@ function ContactDialog(props) {
               marginTop: '1em',
               width: '100%'
             }}
-          >
-            <Select menuPlacement="auto" menuPosition="fixed" options={options} className="basic-single" />
-          </div>
+          > */}
+            {/* <Select menuPlacement="auto" menuPosition="fixed" options={options} className="basic-single" /> */}
+          {/* </div> */}
 
           {/* 
           <div className="flex">

@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import { useMemo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@material-ui/core';
+import NotificationPanel from 'app/fuse-layouts/shared-components/notificationPanel/NotificationPanel';
 import ContactsMultiSelectMenu from './ContactsMultiSelectMenu';
 import ContactsTable from './ContactsTable';
 import {
@@ -14,7 +15,6 @@ import {
   removeContact,
   // toggleStarredContact,
   selectContacts,
-  updateContact
 } from './store/contactsSlice';
 
 const formatData = vehicles =>
@@ -125,8 +125,10 @@ function ContactsList(props) {
             </IconButton> */}
             <IconButton
               onClick={ev => {
-                ev.stopPropagation();
-                dispatch(openEditContactDialog(row.original.id));
+                if(row){
+                  ev.stopPropagation();
+                  dispatch(openEditContactDialog(row.original));
+                }
               }}
             >
               <Icon>edit</Icon>
@@ -136,7 +138,6 @@ function ContactsList(props) {
               onClick={ev => {
                 ev.stopPropagation();
                 dispatch(removeContact(row.original.id));
-                // console.log(row.original.id);
               }}
             >
               <Icon>delete</Icon>
@@ -184,11 +185,12 @@ function ContactsList(props) {
         columns={columns}
         data={formattedData}
         onRowClick={(ev, row) => {
-          // if (row) {
-          //   dispatch(openEditContactDialog(row.original));
-          // }
+          if (row) {
+            dispatch(openEditContactDialog(row.original));
+          }
         }}
       />
+      <NotificationPanel/>
     </motion.div>
   );
 }

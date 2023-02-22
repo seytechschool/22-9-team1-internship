@@ -1,5 +1,5 @@
 import React from 'react';
-import { fade, ThemeProvider, withStyles, makeStyles, createTheme } from '@material-ui/core/styles';
+import { alpha, ThemeProvider, withStyles, makeStyles, createTheme } from '@material-ui/core/styles';
 import InputBase from '@material-ui/core/InputBase';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
@@ -57,7 +57,7 @@ const BootstrapInput = withStyles(theme => ({
       '"Segoe UI Symbol"'
     ].join(','),
     '&:focus': {
-      boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
+      boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 0.2rem`,
       borderColor: theme.palette.primary.main
     }
   }
@@ -75,7 +75,7 @@ const useStylesReddit = makeStyles(theme => ({
     },
     '&$focused': {
       backgroundColor: '#fff',
-      boxShadow: `${fade(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
+      boxShadow: `${alpha(theme.palette.primary.main, 0.25)} 0 0 0 2px`,
       borderColor: theme.palette.primary.main
     }
   },
