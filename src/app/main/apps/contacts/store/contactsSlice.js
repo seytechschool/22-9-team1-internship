@@ -1,4 +1,6 @@
 import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
+import { addNotification } from 'app/fuse-layouts/shared-components/notificationPanel/store/dataSlice';
+import NotificationModel from 'app/fuse-layouts/shared-components/notificationPanel/model/NotificationModel';
 import axios from 'axios';
 import { getUserData } from './userSlice';
 
@@ -34,15 +36,22 @@ export const addContact = createAsyncThunk(
   }
 );
 
-export const updateContact = createAsyncThunk(
+export const updateVehicle = createAsyncThunk(
   'vehicle-list-app/vehicles/updateVehicle',
-  async (contact, { dispatch, getState }) => {
-    const response = await axios.post(`https://cargofleet-api.fly.dev/team1/api/vehicles`, { contact });
-    const data = await response.data.data;
-
-    dispatch(getVehicles());
-
-    return data;
+  async (vehicle, { dispatch, getState }) => {
+    try{
+      await axios.put(`https://cargofleet-api.fly.dev/team1/api/vehicles/${vehicle.id}`, vehicle );
+      dispatch(
+        addNotification(NotificationModel({ message: 'Vehicle has been updated', options: { variant: 'success' } }))
+      );
+      return vehicle;
+    }
+    catch(error){
+      dispatch(
+        addNotification(NotificationModel({ message: "There is an error, please try later", options:{ variant: "error" }}))
+      )
+      return error.message
+    }
   }
 );
 
@@ -190,7 +199,7 @@ const contactsSlice = createSlice({
     }
   },
   extraReducers: {
-    [updateContact.fulfilled]: contactsAdapter.upsertOne,
+    [updateVehicle.fulfilled]: contactsAdapter.upsertOne,
     [addContact.fulfilled]: contactsAdapter.addOne,
     [removeContacts.fulfilled]: (state, action) => contactsAdapter.removeMany(state, action.payload),
     [removeContact.fulfilled]: (state, action) => contactsAdapter.removeOne(state, action.payload),

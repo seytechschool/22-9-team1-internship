@@ -165,12 +165,12 @@ function FuseShortcuts(props) {
         classes={{
           paper: 'mt-48 min-w-256'
         }}
-        onEntered={() => {
-          searchInputRef.current.focus();
-        }}
-        onExited={() => {
-          setSearchText('');
-        }}
+        // onEntered={() => {
+        //   searchInputRef.current.focus();
+        // }}
+        // onExited={() => {
+        //   setSearchText('');
+        // }}
       >
         <div className="p-16 pt-8">
           <Input
