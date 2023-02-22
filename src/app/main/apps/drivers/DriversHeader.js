@@ -9,8 +9,8 @@ import Typography from '@material-ui/core/Typography';
 import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMainTheme } from 'app/store/fuse/settingsSlice';
+import { openNewDriversDialog } from './store/driversSlice';
 // import { useNavigate } from 'react-router-dom';
-// import { addContact, openEditContactDialog, openNewContactDialog, setContactsSearchText } from './store/contactsSlice';
 
 function DriversHeader(props) {
   const dispatch = useDispatch();
@@ -51,9 +51,9 @@ function DriversHeader(props) {
           </Typography>
         </div>
       </div>
-      {/* <Button variant="contained" onClick={() => dispatch(openNewContactDialog())}>
+      <Button variant="contained" onClick={() => dispatch(openNewDriversDialog())}>
         Add New
-      </Button> */}
+      </Button>
 
       <div className="flex flex-1 items-center justify-center px-8 sm:px-12">
         <ThemeProvider theme={mainTheme}>
