@@ -23,8 +23,52 @@ const driversSlice = createSlice({
   name: 'driversApp/drivers',
   initialState: driversAdapter.getInitialState({
     routeParams: {},
+    driversDialog: {
+      type: 'new',
+      props: {
+        open: false
+      },
+      data: null
+    }
   }),
-  reducers: {},
+  reducers: {
+    openNewDriversDialog: (state, action) => {
+      state.driversDialog = {
+        type: "new",
+        props: {
+          open: true
+        },
+        data: null
+      }
+    },
+    closeNewDriversDialog: (state, action) => {
+      state.driversDialog = {
+        type: "new",
+        props: {
+          open: false
+        },
+        data: null
+      }
+    },
+    openEditDriversDialog: (state, action) => {
+      state.driversDialog = {
+        type: "edit",
+        props: {
+          open: true
+        },
+        data: action.payload
+      }
+    },
+    closeEditDriversDialog: (state, action) => {
+      state.driversDialog = {
+        type: "edit",
+        props: {
+          open: false
+        },
+        data: null
+      }
+    }
+  },
   extraReducers: {
     [getDrivers.fulfilled]: (state, action) => {
       const { data, routeParams } = action.payload;
@@ -34,6 +78,11 @@ const driversSlice = createSlice({
   }
 });
 
-// export const {} = driversSlice.actions;
+export const {
+  openEditDriversDialog,
+  closeEditDriversDialog,
+  openNewDriversDialog,
+  closeNewDriversDialog
+} = driversSlice.actions;
 
 export default driversSlice.reducer;

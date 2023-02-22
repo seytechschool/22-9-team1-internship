@@ -8,16 +8,16 @@ import DriversHeader from './DriversHeader';
 import reducer from './store';
 import DriversList from './DriversList';
 import { getDrivers } from './store/driversSlice';
+import DriversDialog from './DriversDialog';
 
 function DriversApp(props) {
   const dispatch = useDispatch();
 
   const pageLayout = useRef(null);
-  const routeParams = useParams();
 
   useDeepCompareEffect(() => {
-    dispatch(getDrivers(routeParams));
-  }, [dispatch, routeParams]);
+    dispatch(getDrivers());
+  }, [dispatch]);
 
   return (
     <>
@@ -35,9 +35,9 @@ function DriversApp(props) {
         ref={pageLayout}
         innerScroll
       />
-      {/* <ContactDialog /> */}
+      <DriversDialog />
     </>
   );
 }
 
-export default withReducer('DriversApp', reducer)(DriversApp);
+export default withReducer('driversApp', reducer)(DriversApp);
