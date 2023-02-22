@@ -17,7 +17,6 @@ function DriversApp(props) {
 
   useDeepCompareEffect(() => {
     dispatch(getDrivers(routeParams));
-    // dispatch(getUserData());
   }, [dispatch, routeParams]);
 
   return (
