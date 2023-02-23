@@ -19,7 +19,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
-    minWidth: 0,
+    minwidth: 0,
     minHeight: '100%',
     position: 'relative',
     flex: '1 1 auto',
@@ -35,7 +35,7 @@ const useStyles = makeStyles(theme => ({
     flex: '1 1 auto',
     zIndex: 2,
     maxWidth: '100%',
-    minWidth: 0,
+    minwidth: 0,
     height: '100%',
     backgroundColor: theme.palette.background.default
   },
@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
          display : 'flex ',
          flex    : '1 1 auto',
          overflow: 'visible!important',
-         minWidth: 0,
+         minwidth: 0,
          '&.ps'  : {
              overflow: 'visible!important'
          }

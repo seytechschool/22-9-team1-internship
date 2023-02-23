@@ -112,7 +112,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'center',
     padding: '12px 0',
     width: '100%',
-    minWidth: 56
+    minwidth: 56
   },
   button: {
     padding: 8,

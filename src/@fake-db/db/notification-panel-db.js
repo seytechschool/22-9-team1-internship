@@ -3,7 +3,7 @@ import mock from '../mock';
 
 const notificationPanelDB = [
   NotificationModel({
-    message: 'Welcome to The Fuse React!'
+    message: 'Welcome Back!'
   })
 ];
 

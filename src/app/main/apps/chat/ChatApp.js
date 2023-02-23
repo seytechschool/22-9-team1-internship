@@ -69,7 +69,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     flex: '1 0 auto',
     width: '100%',
-    minWidth: '0',
+    minwidth: '0',
     maxHeight: '100%',
     margin: '0 auto',
     [theme.breakpoints.down('sm')]: {

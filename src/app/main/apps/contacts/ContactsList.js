@@ -11,6 +11,7 @@ import NotificationPanel from 'app/fuse-layouts/shared-components/notificationPa
 import ContactsMultiSelectMenu from './ContactsMultiSelectMenu';
 import ContactsTable from './ContactsTable';
 import {
+  openDeleteContactDialog,
   openEditContactDialog,
   openNewContactDialog,
   removeContact,
@@ -30,7 +31,8 @@ const formatData = vehicles =>
 function ContactsList(props) {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
-  const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText);
+  const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText );
+  const data = useSelector(({ contactsApp }) => contactsApp.contacts.data );
   // const user = useSelector(({ contactsApp }) => contactsApp.user);
 
   const [filteredData, setFilteredData] = useState(null);
@@ -102,7 +104,8 @@ function ContactsList(props) {
             <IconButton
               onClick={ev => {
                 ev.stopPropagation();
-                dispatch(removeContact(row.original.id));
+                dispatch(openDeleteContactDialog(row.original.id));
+                // dispatch(removeContact(row.original.id));
               }}
             >
               <Icon>delete</Icon>

@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   button: {
-    minWidth: 40,
+    minwidth: 40,
     width: 40,
     height: 40,
     margin: 0

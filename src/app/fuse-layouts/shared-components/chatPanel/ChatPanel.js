@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     width: 70,
     maxWidth: 70,
-    minWidth: 70,
+    minwidth: 70,
     height: '100vh',
     zIndex: 1000,
     '&.opened': {
@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
     [theme.breakpoints.down('md')]: {
       width: 0,
       maxWidth: 0,
-      minWidth: 0
+      minwidth: 0
     }
   },
   panel: {
@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
     bottom: 0,
     left: 0,
     width: 360,
-    minWidth: 360,
+    minwidth: 360,
     height: '100vh',
     margin: 0,
     overflow: 'hidden',
@@ -73,7 +73,7 @@ const useStyles = makeStyles(theme => ({
       transform: 'translate3d(360px,0,0)!important',
       boxShadow: 'none',
       width: 320,
-      minWidth: 320,
+      minwidth: 320,
       maxWidth: '100%',
       '&.opened': {
         transform: 'translate3d(0,0,0)!important',

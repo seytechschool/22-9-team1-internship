@@ -19,9 +19,9 @@ export const addVehicle = createAsyncThunk('vehicle-list-app/vehicles/addVehicle
       color: contact.color,
       plate_number: contact.plate_number,
       engine_number: contact.engine_number,
-      fuel_type: contact.fuel_type.value,
+      fuel_type: contact.fuel_type,
       image_url: contact.image_url,
-      active: false
+      active: contact.active
     });
 
     dispatch(
@@ -39,7 +39,7 @@ export const addVehicle = createAsyncThunk('vehicle-list-app/vehicles/addVehicle
 
 export const updateContact = createAsyncThunk(
   'vehicle-list-app/vehicles/updateVehicle',
-  async (vehicle, { dispatch}) => {
+  async (vehicle, { dispatch }) => {
     try {
       const response = await axios.put(`https://cargofleet-api.fly.dev/team1/api/vehicles/${vehicle.id}`, vehicle);
       const data = await response.data.data;
@@ -60,11 +60,21 @@ export const updateContact = createAsyncThunk(
 export const removeContact = createAsyncThunk(
   'vehicle-list-app/vehicles/removeVehicle',
   async (contactId, { dispatch }) => {
-    const response = await axios.delete(`https://cargofleet-api.fly.dev/team1/api/vehicles/${contactId}`);
-    const data = await response.data.data;
-    dispatch(getVehicles());
+    try {
+      const response = await axios.delete(`https://cargofleet-api.fly.dev/team1/api/vehicles/${contactId}`);
+      const data = await response.data.data;
+      dispatch(
+        addNotification(NotificationModel({ message: 'Vehicle has been removed', options: { variant: 'success' } }))
+      );
+      dispatch(getVehicles());
 
-    return { data };
+      return { data };
+    } catch (error) {
+      dispatch(
+        addNotification(NotificationModel({ message: 'Vehicle has not been removed', options: { variant: 'error' } }))
+      );
+      return error.message;
+    }
   }
 );
 
@@ -194,6 +204,24 @@ const contactsSlice = createSlice({
         },
         data: null
       };
+    },
+    openDeleteContactDialog: (state, action) => {
+      state.contactDialog = {
+        type: 'delete',
+        props: {
+          open: true
+        },
+        data: action.payload
+      };
+    },
+    closeDeleteContactDialog: (state, action) => {
+      state.contactDialog = {
+        type: 'delete',
+        props: {
+          open: false
+        },
+        data: null
+      };
     }
   },
   extraReducers: {
@@ -213,6 +241,8 @@ const contactsSlice = createSlice({
 export const {
   setContactsSearchText,
   openNewContactDialog,
+  openDeleteContactDialog,
+  closeDeleteContactDialog,
   closeNewContactDialog,
   openEditContactDialog,
   closeEditContactDialog
