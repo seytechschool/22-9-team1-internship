@@ -27,16 +27,16 @@ export default function BadgeOverlap() {
 
   return (
     <div className={classes.root}>
-      <Badge color="secondary" badgeContent=" ">
+      <Badge color="secondary" overlap="rectangular" badgeContent=" ">
         {rectangle}
       </Badge>
-      <Badge color="secondary" badgeContent=" " variant="dot">
+      <Badge color="secondary" overlap="rectangular" badgeContent=" " variant="dot">
         {rectangle}
       </Badge>
-      <Badge color="secondary" overlap="circle" badgeContent=" ">
+      <Badge color="secondary" overlap="rectangular" badgeContent=" ">
         {circle}
       </Badge>
-      <Badge color="secondary" overlap="circle" badgeContent=" " variant="dot">
+      <Badge color="secondary" overlap="rectangular" badgeContent=" " variant="dot">
         {circle}
       </Badge>
     </div>

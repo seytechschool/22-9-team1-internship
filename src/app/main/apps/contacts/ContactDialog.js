@@ -23,7 +23,7 @@ import * as yup from 'yup';
 import {
   removeContact,
   updateContact,
-  addContact,
+  addVehicle,
   closeNewContactDialog,
   closeEditContactDialog
 } from './store/contactsSlice';
@@ -35,22 +35,8 @@ const options = [
   { value: 'natural_gas', label: 'Natural gas' }
 ];
 
-// const defaultValues = {
-//   id: '',
-//   name: '',
-//   lastName: '',
-//   avatar: 'assets/images/avatars/profile.jpg',
-//   nickname: '',
-//   company: '',
-//   jobTitle: '',
-//   email: '',
-//   phone: '',
-//   address: '',
-//   birthday: '',
-//   notes: ''
-// };
 const defaultValues = {
-  id: '',
+  // id: '',
   brand: '',
   model: '',
   manufacture_year: '',
@@ -65,17 +51,17 @@ const defaultValues = {
 // /**
 //  * Form Validation Schema
 //  */
-const schema = yup.object().shape({
-  brand: yup.string().required('You must enter a brand'),
-  model: yup.string().required('You must enter a model'),
-  manufacture_year: yup.string().required('You must enter a year'),
-  color: yup.string().required('You must enter a color'),
-  image_url: yup.string().required('You must enter a image url'),
-  plate_number: yup.string().required('You must enter a plate number'),
-  engine_number: yup.string().required('You must enter a engine number'),
-  fuel_type: yup.string().required('You must enter a fuel type'),
-  active: yup.string().required('You must enter a active'),
-});
+// const schema = yup.object().shape({
+//   // brand: yup.string().required('You must enter a brand'),
+//   // model: yup.string().required('You must enter a model'),
+//   // manufacture_year: yup.string().required('You must enter a year'),
+//   // color: yup.string().required('You must enter a color'),
+//   // image_url: yup.string().required('You must enter a image url'),
+//   // plate_number: yup.string().required('You must enter a plate number'),
+//   // engine_number: yup.string().required('You must enter a engine number'),
+//   // fuel_type: yup.string().required('You must enter a fuel type'),
+//   // active: yup.string().required('You must enter a active')
+// });
 
 function ContactDialog(props) {
   const dispatch = useDispatch();
@@ -83,15 +69,15 @@ function ContactDialog(props) {
 
   const { control, watch, reset, handleSubmit, formState, getValues } = useForm({
     mode: 'onChange',
-    defaultValues,
-    resolver: yupResolver(schema)
+    defaultValues
+    // resolver: yupResolver(schema)
   });
 
   const { isValid, dirtyFields, errors } = formState;
 
-  const id = watch('id');
+  // const id = watch('id');
   // const name = watch('name');
-  const vehicleBrand = watch('brand');
+  // const vehicleBrand = watch('brand');
   // const avatar = watch('avatar');
 
   //   /**
@@ -102,18 +88,24 @@ function ContactDialog(props) {
      * Dialog type: 'edit'
      */
     if (contactDialog.type === 'edit' && contactDialog.data) {
-      reset({ ...contactDialog.data });
+      reset({
+        // ...defaultValues,
+        ...contactDialog.data
+      });
     }
 
     //     /**
     //      * Dialog type: 'new'
     //      */
     if (contactDialog.type === 'new') {
-      reset({
-        ...defaultValues,
-        ...contactDialog.data,
-        id: FuseUtils.generateGUID()
-      });
+      reset(
+        // {
+        // ...defaultValues,
+        // ...contactDialog.data,
+        // id: Math.floor(Math.random()*1000),
+        // id: FuseUtils.generateGUID()
+        // }
+      );
     }
   }, [contactDialog.data, contactDialog.type, reset]);
 
@@ -138,9 +130,10 @@ function ContactDialog(props) {
   //    */
   function onSubmit(data) {
     if (contactDialog.type === 'new') {
-      dispatch(addContact(data));
+      dispatch(addVehicle(data));
+      console.log('data', data)
     } else {
-      dispatch(updateContact({ ...contactDialog.data, ...data }));
+      dispatch(updateContact(data));
     }
     closeComposeDialog();
   }
@@ -164,7 +157,7 @@ function ContactDialog(props) {
       {...contactDialog.props}
       onClose={closeComposeDialog}
       fullWidth
-      minwidth="xs"
+      minWidth="xs"
     >
       <AppBar position="static" elevation={0}>
         <Toolbar className="flex w-full">
@@ -173,11 +166,10 @@ function ContactDialog(props) {
           </Typography>
         </Toolbar>
         <div className="flex flex-col items-center justify-center pb-24">
-          {/* <Avatar className="w-96 h-96" alt="contact avatar" src={avatar} /> */}
           <LocalShippingIcon style={{ fontSize: 100 }} />
           {contactDialog.type === 'edit' && (
             <Typography variant="h6" color="inherit" className="pt-8">
-              {vehicleBrand}
+              {/* {vehicleBrand} */}
             </Typography>
           )}
         </div>
@@ -185,12 +177,9 @@ function ContactDialog(props) {
       <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col md:overflow-hidden">
         <DialogContent classes={{ root: 'p-24' }}>
           <div className="flex">
-            {/* <div className="min-w-48 pt-20"> */}
-            {/* <Icon color="action">account_circle</Icon> */}
-            {/* </div> */}
             <Controller
-              control={control}
               name="brand"
+              control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -208,8 +197,6 @@ function ContactDialog(props) {
           </div>
 
           <div className="flex">
-            {/* <div className="min-w-48 pt-20" /> */}
-
             <Controller
               control={control}
               name="model"
@@ -220,9 +207,6 @@ function ContactDialog(props) {
           </div>
 
           <div className="flex">
-            {/* <div className="min-w-48 pt-20">
-              <Icon color="action">star</Icon>
-            </div> */}
             <Controller
               control={control}
               name="manufacture_year"
@@ -232,8 +216,8 @@ function ContactDialog(props) {
                   className="mb-24"
                   id="manufacture_year"
                   variant="outlined"
-                  type="number"
-                  label="Year Of Manufacture"
+                  type="date"
+                  label="Date Of Manufacture"
                   InputLabelProps={{
                     shrink: true
                   }}
@@ -245,9 +229,6 @@ function ContactDialog(props) {
           </div>
 
           <div className="flex">
-            {/* <div className="min-w-48 pt-20"> */}
-            {/* <Icon color="action">phone</Icon> */}
-            {/* </div> */}
             <Controller
               control={control}
               name="color"
@@ -293,13 +274,13 @@ function ContactDialog(props) {
           <div className="flex">
             <Controller
               control={control}
-              name="fuel_type"
+              name="plate_number"
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Engine Number"
-                  id="engine_number"
+                  label="Plate Number"
+                  id="plate_number"
                   variant="outlined"
                   fullWidth
                 />
@@ -307,126 +288,21 @@ function ContactDialog(props) {
             />
           </div>
 
+          <Controller
+            control={control}
+            name="fuel_type"
+            render={({ field }) => (
+              <Select
+                {...field}
+                id="fuel_type"
+                menuPlacement="auto"
+                menuPosition="fixed"
+                options={options}
+                className="basic-single"
+              />
+            )}
+          />
 
-
-          {/* <div
-            style={{
-              color: 'hsl(0, 0%, 40%)',
-              display: 'inline-block',
-              fontSize: 16,
-              marginTop: '1em',
-              width: '100%'
-            }}
-          > */}
-            {/* <Select menuPlacement="auto" menuPosition="fixed" options={options} className="basic-single" /> */}
-          {/* </div> */}
-
-          {/* 
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">email</Icon>
-            </div>
-            <Controller
-              control={control}
-              name="email"
-              render={({ field }) => (
-                <TextField {...field} className="mb-24" label="Email" id="email" variant="outlined" fullWidth />
-              )}
-            />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">domain</Icon>
-            </div>
-            <Controller
-              control={control}
-              name="company"
-              render={({ field }) => (
-                <TextField {...field} className="mb-24" label="Company" id="company" variant="outlined" fullWidth />
-              )}
-            />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">work</Icon>
-            </div>
-            <Controller
-              control={control}
-              name="jobTitle"
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  label="Job title"
-                  id="jobTitle"
-                  name="jobTitle"
-                  variant="outlined"
-                  fullWidth
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">cake</Icon>
-            </div>
-            <Controller
-              control={control}
-              name="birthday"
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  id="birthday"
-                  label="Birthday"
-                  type="date"
-                  InputLabelProps={{
-                    shrink: true
-                  }}
-                  variant="outlined"
-                  fullWidth
-                />
-              )}
-            />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">home</Icon>
-            </div>
-            <Controller
-              control={control}
-              name="address"
-              render={({ field }) => (
-                <TextField {...field} className="mb-24" label="Address" id="address" variant="outlined" fullWidth />
-              )}
-            />
-          </div>
-
-          <div className="flex">
-            <div className="min-w-48 pt-20">
-              <Icon color="action">note</Icon>
-            </div>
-            <Controller
-              control={control}
-              name="notes"
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  label="Notes"
-                  id="notes"
-                  variant="outlined"
-                  multiline
-                  rows={5}
-                  fullWidth
-                />
-              )}
-            />
-          </div> */}
         </DialogContent>
 
         {contactDialog.type === 'new' ? (

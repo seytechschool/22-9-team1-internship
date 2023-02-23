@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMainTheme } from 'app/store/fuse/settingsSlice';
 // import { useNavigate } from 'react-router-dom';
-import { addContact, openEditContactDialog, openNewContactDialog, setContactsSearchText } from './store/contactsSlice';
+import { addVehicle, openEditContactDialog, openNewContactDialog, setContactsSearchText } from './store/contactsSlice';
 
 function ContactsHeader(props) {
   const dispatch = useDispatch();
@@ -37,14 +37,6 @@ function ContactsHeader(props) {
         </Hidden>
 
         <div className="flex items-center">
-          {/* <Icon
-            component={motion.span}
-            initial={{ scale: 0 }}
-            animate={{ scale: 1, transition: { delay: 0.2 } }}
-            className="text-24 md:text-32"
-          >
-            account_box
-          </Icon> */}
           <Typography
             component={motion.span}
             initial={{ x: -20 }}
