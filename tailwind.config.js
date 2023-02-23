@@ -1318,7 +1318,7 @@ module.exports = {
     maxHeight: ['responsive'],
     maxWidth: ['responsive'],
     minHeight: ['responsive'],
-    minWidth: ['responsive'],
+    minwidth: ['responsive'],
     mixBlendMode: [],
     objectFit: ['responsive'],
     objectPosition: ['responsive'],

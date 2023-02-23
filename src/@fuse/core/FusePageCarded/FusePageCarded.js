@@ -20,7 +20,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexDirection: 'row',
-    minWidth: 0,
+    minwidth: 0,
     minHeight: '100%',
     position: 'relative',
     flex: '1 1 auto',
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
     flex: '1 1 100%',
     zIndex: 2,
     maxWidth: '100%',
-    minWidth: 0,
+    minwidth: 0,
     minHeight: 0,
     [theme.breakpoints.down('xs')]: {
       padding: '0 1.6rem'

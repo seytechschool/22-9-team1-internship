@@ -10,26 +10,26 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 
 const columns = [
-  { id: 'name', label: 'Name', minWidth: 170 },
-  { id: 'code', label: 'ISO\u00a0Code', minWidth: 100 },
+  { id: 'name', label: 'Name', minwidth: 170 },
+  { id: 'code', label: 'ISO\u00a0Code', minwidth: 100 },
   {
     id: 'population',
     label: 'Population',
-    minWidth: 170,
+    minwidth: 170,
     align: 'right',
     format: value => value.toLocaleString('en-US')
   },
   {
     id: 'size',
     label: 'Size\u00a0(km\u00b2)',
-    minWidth: 170,
+    minwidth: 170,
     align: 'right',
     format: value => value.toLocaleString('en-US')
   },
   {
     id: 'density',
     label: 'Density',
-    minWidth: 170,
+    minwidth: 170,
     align: 'right',
     format: value => value.toFixed(2)
   }
@@ -88,7 +88,7 @@ export default function StickyHeadTable() {
           <TableHead>
             <TableRow>
               {columns.map(column => (
-                <TableCell key={column.id} align={column.align} style={{ minWidth: column.minWidth }}>
+                <TableCell key={column.id} align={column.align} style={{ minWidth: column.minwidth }}>
                   {column.label}
                 </TableCell>
               ))}

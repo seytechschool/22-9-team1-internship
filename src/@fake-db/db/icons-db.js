@@ -3491,7 +3491,7 @@ const iconsDB = [
       'images',
       'photo',
       'photos',
-      'rectangle',
+      'rectangular',
       'settings',
       'size',
       'square'
@@ -3518,7 +3518,7 @@ const iconsDB = [
       'images',
       'photo',
       'photos',
-      'rectangle',
+      'rectangular',
       'settings',
       'size',
       'square',
@@ -3546,7 +3546,7 @@ const iconsDB = [
       'images',
       'photo',
       'photos',
-      'rectangle',
+      'rectangular',
       'settings',
       'size',
       'square',
@@ -3574,7 +3574,7 @@ const iconsDB = [
       'images',
       'photo',
       'photos',
-      'rectangle',
+      'rectangular',
       'size',
       'square',
       'x'
@@ -3600,7 +3600,7 @@ const iconsDB = [
       'images',
       'photo',
       'photos',
-      'rectangle',
+      'rectangular',
       'settings',
       'size',
       'square',
@@ -3626,7 +3626,7 @@ const iconsDB = [
       'images',
       'photo',
       'photos',
-      'rectangle',
+      'rectangular',
       'settings',
       'size',
       'square'
@@ -3721,7 +3721,7 @@ const iconsDB = [
       'photo',
       'photos',
       'portrait',
-      'rectangle',
+      'rectangular',
       'settings',
       'size',
       'square'
@@ -3771,7 +3771,7 @@ const iconsDB = [
       'images',
       'photo',
       'photos',
-      'rectangle',
+      'rectangular',
       'settings',
       'size',
       'square'
@@ -3783,7 +3783,7 @@ const iconsDB = [
     version: 6,
     unsupported_families: [],
     categories: ['action'],
-    tags: ['cards', 'dashboard', 'rectangle', 'shapes', 'square'],
+    tags: ['cards', 'dashboard', 'rectangular', 'shapes', 'square'],
     sizes_px: [24]
   },
   {
@@ -7676,7 +7676,7 @@ const iconsDB = [
     version: 6,
     unsupported_families: [],
     categories: ['image'],
-    tags: ['aspect', 'image', 'photo', 'photography', 'picture', 'ratio', 'rectangle', 'square'],
+    tags: ['aspect', 'image', 'photo', 'photography', 'picture', 'ratio', 'rectangular', 'square'],
     sizes_px: [24]
   },
   {

@@ -9,7 +9,7 @@ const useStyles = makeStyles(theme => ({
     fontSize: 11,
     fontWeight: 600,
     height: 20,
-    minWidth: 20,
+    minwidth: 20,
     borderRadius: 20,
     display: 'flex',
     alignItems: 'center',

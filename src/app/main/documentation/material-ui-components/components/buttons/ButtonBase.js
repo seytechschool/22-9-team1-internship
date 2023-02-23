@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     flexWrap: 'wrap',
-    minWidth: 300,
+    minwidth: 300,
     width: '100%'
   },
   image: {

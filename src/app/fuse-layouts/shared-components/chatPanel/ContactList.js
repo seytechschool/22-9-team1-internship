@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   },
   contactButton: {
     width: 70,
-    minWidth: 70,
+    minwidth: 70,
     flex: '0 0 auto',
     '&.active:after': {
       position: 'absolute',
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
   },
   unreadBadge: {
     position: 'absolute',
-    minWidth: 18,
+    minwidth: 18,
     height: 18,
     top: 4,
     left: 10,

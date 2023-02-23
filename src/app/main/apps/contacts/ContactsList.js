@@ -7,10 +7,13 @@ import Typography from '@material-ui/core/Typography';
 import { useMemo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button } from '@material-ui/core';
+import NotificationPanel from 'app/fuse-layouts/shared-components/notificationPanel/NotificationPanel';
 import ContactsMultiSelectMenu from './ContactsMultiSelectMenu';
 import ContactsTable from './ContactsTable';
 import {
+  openDeleteContactDialog,
   openEditContactDialog,
+  openNewContactDialog,
   removeContact,
   // toggleStarredContact,
   selectContacts,
@@ -19,24 +22,18 @@ import {
 
 const formatData = vehicles =>
   vehicles.map(vehicle => {
-    // const totalCost = `$${(vehicle.serviceCost + vehicle.fuelCost).toLocaleString()}`;
-    // const fullName = `${vehicle.driver.last_name} ${vehicle.driver.first_name}`;
-
     return {
       ...vehicle,
-      // isAssigned: vehicle.isAssigned ? 'YES' : 'NO',
-      // isAssigned: vehicle.active ? 'YES' : 'NO',
       fullName: vehicle.driver ? `${vehicle.driver.first_name} ${vehicle.driver.last_name}` : ''
-      // totalCost,
-      // millage: vehicle.millage.toLocaleString()
     };
   });
 
 function ContactsList(props) {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
-  const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText);
-  const user = useSelector(({ contactsApp }) => contactsApp.user);
+  const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText );
+  const data = useSelector(({ contactsApp }) => contactsApp.contacts.data );
+  // const user = useSelector(({ contactsApp }) => contactsApp.user);
 
   const [filteredData, setFilteredData] = useState(null);
 
@@ -63,25 +60,7 @@ function ContactsList(props) {
           </div>
         )
       },
-      // {
-      //   // Header: 'Assigned Status',
 
-      //   sortable: true
-      // },
-      // {
-      //   Header: ({ selectedFlatRows }) => {
-      //     const selectedRowIds = selectedFlatRows.map(row => row.original.id);
-
-      //     return selectedFlatRows.length > 0 && <ContactsMultiSelectMenu selectedContactIds={selectedRowIds} />;
-      //   },
-      //   accessor: 'avatar',
-      //   Cell: ({ row }) => {
-      //     return <Avatar className="mx-8" alt={row.original.name} src={row.original.avatar} />;
-      //   },
-      //   className: 'justify-center',
-      //   width: 64,
-      //   sortable: false
-      // },
       {
         Header: 'Vehicle Brand',
         accessor: 'brand',
@@ -111,22 +90,12 @@ function ContactsList(props) {
         sortable: false,
         Cell: ({ row }) => (
           <div className="flex items-center">
-            {/* <IconButton
-              onClick={ev => {
-                ev.stopPropagation();
-                dispatch(toggleStarredContact(row.original.id));
-              }}
-            >
-              {user.starred && user.starred.includes(row.original.id) ? (
-                <Icon className="text-yellow-700">star</Icon>
-              ) : (
-                <Icon>star</Icon>
-              )}
-            </IconButton> */}
             <IconButton
               onClick={ev => {
-                ev.stopPropagation();
-                dispatch(openEditContactDialog(row.original.id));
+                if (row) {
+                  ev.stopPropagation();
+                  dispatch(openEditContactDialog(row.original));
+                }
               }}
             >
               <Icon>edit</Icon>
@@ -135,8 +104,8 @@ function ContactsList(props) {
             <IconButton
               onClick={ev => {
                 ev.stopPropagation();
-                dispatch(removeContact(row.original.id));
-                // console.log(row.original.id);
+                dispatch(openDeleteContactDialog(row.original.id));
+                // dispatch(removeContact(row.original.id));
               }}
             >
               <Icon>delete</Icon>
@@ -180,6 +149,7 @@ function ContactsList(props) {
 
   return (
     <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1, transition: { delay: 0.2 } }}>
+
       <ContactsTable
         columns={columns}
         data={formattedData}
@@ -189,6 +159,7 @@ function ContactsList(props) {
           // }
         }}
       />
+      <NotificationPanel />
     </motion.div>
   );
 }

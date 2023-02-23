@@ -11,7 +11,7 @@ const navbarWidth = 280;
 
 const useStyles = makeStyles(theme => ({
   navbar: {
-    minWidth: navbarWidth,
+    minwidth: navbarWidth,
     width: navbarWidth,
     maxWidth: navbarWidth,
     '&.closed': {
@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   navbarPaper: {
-    minWidth: navbarWidth,
+    minwidth: navbarWidth,
     width: navbarWidth,
     maxWidth: navbarWidth
   }
