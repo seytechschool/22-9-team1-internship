@@ -10,42 +10,36 @@ export const getVehicles = createAsyncThunk('vehicle-list-app/vehicles/getVehicl
   return { data };
 });
 
-export const addVehicle = createAsyncThunk(
-  'vehicle-list-app/vehicles/addVehicle',
-  async (contact, { dispatch, getState }) => {
-    // console.log(contact.id)
-    const response = await axios.post(
-      'https://cargofleet-api.fly.dev/team1/api/vehicles',
-      // contact
-      {
-        brand: contact.brand,
-        model: contact.model,
-        manufacture_year: contact.manufacture_year,
-        color: contact.color,
-        plate_number: contact.plate_number,
-        engine_number: contact.engine_number,
-        fuel_type: contact.fuel_type.value,
-        image_url: contact.image_url,
-        active: false,
-        // id: contact.id
-        // id: function selectId(instance) {
-        //   return instance.id;
-        
-      }
+export const addVehicle = createAsyncThunk('vehicle-list-app/vehicles/addVehicle', async (contact, { dispatch }) => {
+  try {
+    const response = await axios.post('https://cargofleet-api.fly.dev/team1/api/vehicles', {
+      brand: contact.brand,
+      model: contact.model,
+      manufacture_year: contact.manufacture_year,
+      color: contact.color,
+      plate_number: contact.plate_number,
+      engine_number: contact.engine_number,
+      fuel_type: contact.fuel_type.value,
+      image_url: contact.image_url,
+      active: false
+    });
+
+    dispatch(
+      addNotification(NotificationModel({ message: 'Vehicle has been added', options: { variant: 'success' } }))
     );
-
-    // const data = await response.data.data;
-    // console.log("data in posting", data)
     dispatch(getVehicles());
-
-    // console.log("object", data)
-    // return data;
+    return response;
+  } catch (error) {
+    dispatch(
+      addNotification(NotificationModel({ message: 'Data has not been added!!!', options: { variant: 'error' } }))
+    );
+    return error.message;
   }
-);
+});
 
 export const updateContact = createAsyncThunk(
   'vehicle-list-app/vehicles/updateVehicle',
-  async (vehicle, { dispatch, getState }) => {
+  async (vehicle, { dispatch}) => {
     try {
       const response = await axios.put(`https://cargofleet-api.fly.dev/team1/api/vehicles/${vehicle.id}`, vehicle);
       const data = await response.data.data;
@@ -66,7 +60,6 @@ export const updateContact = createAsyncThunk(
 export const removeContact = createAsyncThunk(
   'vehicle-list-app/vehicles/removeVehicle',
   async (contactId, { dispatch }) => {
-    console.log('delete:', contactId);
     const response = await axios.delete(`https://cargofleet-api.fly.dev/team1/api/vehicles/${contactId}`);
     const data = await response.data.data;
     dispatch(getVehicles());

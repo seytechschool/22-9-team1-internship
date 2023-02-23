@@ -36,7 +36,6 @@ const options = [
 ];
 
 const defaultValues = {
-  // id: '',
   brand: '',
   model: '',
   manufacture_year: '',
@@ -44,38 +43,38 @@ const defaultValues = {
   image_url: '',
   plate_number: '',
   engine_number: '',
-  fuel_type: '',
+  fuel_type: {},
   active: ''
 };
 
-// /**
-//  * Form Validation Schema
-//  */
-// const schema = yup.object().shape({
-//   // brand: yup.string().required('You must enter a brand'),
-//   // model: yup.string().required('You must enter a model'),
-//   // manufacture_year: yup.string().required('You must enter a year'),
-//   // color: yup.string().required('You must enter a color'),
-//   // image_url: yup.string().required('You must enter a image url'),
-//   // plate_number: yup.string().required('You must enter a plate number'),
-//   // engine_number: yup.string().required('You must enter a engine number'),
-//   // fuel_type: yup.string().required('You must enter a fuel type'),
-//   // active: yup.string().required('You must enter a active')
-// });
+/**
+ * Form Validation Schema
+ */
+const schema = yup.object().shape({
+  brand: yup.string().required('You must enter a brand'),
+  model: yup.string().required('You must enter a model'),
+  manufacture_year: yup.string(),
+  color: yup.string().required('You must enter a color'),
+  image_url: yup.string().required('You must enter a image url'),
+  engine_number: yup.string().required('You must enter a engine number'),
+  plate_number: yup.string().required('You must enter a plate number'),
+  // fuel_type: yup.string(),
+  // active: yup.string().required('You must enter a active')
+}).required();
 
 function ContactDialog(props) {
   const dispatch = useDispatch();
   const contactDialog = useSelector(({ contactsApp }) => contactsApp.contacts.contactDialog);
 
-  const { control, watch, reset, handleSubmit, formState, getValues } = useForm({
+  const { control, watch, reset, handleSubmit, formState, getValues, setValue, register, setFieldValue } = useForm({
     mode: 'onChange',
-    defaultValues
-    // resolver: yupResolver(schema)
+    defaultValues,
+    resolver: yupResolver(schema)
   });
 
   const { isValid, dirtyFields, errors } = formState;
 
-  // const id = watch('id');
+  const id = watch('id');
   // const name = watch('name');
   // const vehicleBrand = watch('brand');
   // const avatar = watch('avatar');
@@ -131,7 +130,6 @@ function ContactDialog(props) {
   function onSubmit(data) {
     if (contactDialog.type === 'new') {
       dispatch(addVehicle(data));
-      console.log('data', data)
     } else {
       dispatch(updateContact(data));
     }
@@ -148,6 +146,8 @@ function ContactDialog(props) {
   function handleCancel() {
     closeComposeDialog();
   }
+
+  
 
   return (
     <Dialog
@@ -180,6 +180,7 @@ function ContactDialog(props) {
             <Controller
               name="brand"
               control={control}
+              register
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -199,6 +200,7 @@ function ContactDialog(props) {
           <div className="flex">
             <Controller
               control={control}
+              register
               name="model"
               render={({ field }) => (
                 <TextField {...field} className="mb-24" label="Model" id="model" variant="outlined" fullWidth />
@@ -209,6 +211,7 @@ function ContactDialog(props) {
           <div className="flex">
             <Controller
               control={control}
+              register
               name="manufacture_year"
               render={({ field }) => (
                 <TextField
@@ -231,6 +234,7 @@ function ContactDialog(props) {
           <div className="flex">
             <Controller
               control={control}
+              register
               name="color"
               render={({ field }) => (
                 <TextField {...field} className="mb-24" label="Color" id="color" variant="outlined" fullWidth />
@@ -241,6 +245,7 @@ function ContactDialog(props) {
           <div className="flex">
             <Controller
               control={control}
+              register
               name="image_url"
               render={({ field }) => (
                 <TextField
@@ -258,6 +263,7 @@ function ContactDialog(props) {
           <div className="flex">
             <Controller
               control={control}
+              register
               name="engine_number"
               render={({ field }) => (
                 <TextField
@@ -274,6 +280,7 @@ function ContactDialog(props) {
           <div className="flex">
             <Controller
               control={control}
+              register
               name="plate_number"
               render={({ field }) => (
                 <TextField
@@ -302,7 +309,6 @@ function ContactDialog(props) {
               />
             )}
           />
-
         </DialogContent>
 
         {contactDialog.type === 'new' ? (
