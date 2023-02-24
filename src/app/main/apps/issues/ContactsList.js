@@ -35,7 +35,7 @@ function ContactsList(props) {
   const contacts = useSelector(selectContacts);
   const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText );
   const data = useSelector(({ contactsApp }) => contactsApp.contacts.data);
-  console.log('data drivers contact list', data)
+  console.log('CONTACTS issue is rendering', contacts)
   // const user = useSelector(({ contactsApp }) => contactsApp.user);
 
   const [filteredData, setFilteredData] = useState(null);
@@ -81,24 +81,29 @@ function ContactsList(props) {
       //   accessor: 'plate_number',
       //   sortable: true
       // },
+      // {
+      //   Header: 'Driver Full Name',
+      //   accessor: 'fullName',
+      //   sortable: true
+      // },
       {
-        Header: 'Driver Full Name',
-        accessor: 'fullName',
+        Header: 'Title',
+        accessor: 'title',
+        sortable: true
+      },
+      // {
+      //   Header: 'Description',
+      //   accessor: 'description',
+      //   sortable: false
+      // },
+      {
+        Header: 'Priority',
+        accessor: 'priority',
         sortable: true
       },
       {
-        Header: 'Address',
-        accessor: 'fullAddress',
-        sortable: true
-      },
-      {
-        Header: 'Phone Number',
-        accessor: 'phone_number',
-        sortable: false
-      },
-      {
-        Header: 'Email',
-        accessor: 'email',
+        Header: 'Due Date',
+        accessor: 'due_date',
         sortable: true
       },
 
@@ -157,7 +162,7 @@ function ContactsList(props) {
     return (
       <div className="flex flex-1 items-center justify-center h-full">
         <Typography color="textSecondary" variant="h5">
-          There are no drivers!
+          There are no issues!
         </Typography>
       </div>
     );
