@@ -11,7 +11,6 @@ import NotificationPanel from 'app/fuse-layouts/shared-components/notificationPa
 import ContactsMultiSelectMenu from './ContactsMultiSelectMenu';
 import ContactsTable from './ContactsTable';
 import {
-  openAssignContactDialog,
   openDeleteContactDialog,
   openEditContactDialog,
   openNewContactDialog,
@@ -25,66 +24,81 @@ const formatData = vehicles =>
   vehicles.map(vehicle => {
     return {
       ...vehicle,
-      fullName: vehicle.driver ? `${vehicle.driver.first_name} ${vehicle.driver.last_name}` : '',
-      assigned: vehicle.active,
+      fullName: `${(vehicle.first_name)} ${vehicle.last_name}` || '',
+      fullAddress: `${(vehicle.address1)}, ${vehicle.city} ${vehicle.state}` || ''
     };
   });
+  console.log('formattedData drivers', formatData)
 
-  
-  function ContactsList(props) {
-    const dispatch = useDispatch();
-    const contacts = useSelector(selectContacts);
-    console.log('contacts', contacts)
+function ContactsList(props) {
+  const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
   const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText );
-  const data = useSelector(({ contactsApp }) => contactsApp.contacts.data );
+  const data = useSelector(({ contactsApp }) => contactsApp.contacts.data);
+  console.log('data', data)
   // const user = useSelector(({ contactsApp }) => contactsApp.user);
 
   const [filteredData, setFilteredData] = useState(null);
 
   const columns = useMemo(
     () => [
-      {
-        id: 'assign',
-        Header: 'Assign/Unassign ',
-        accessor: 'assigned' ,
-        width: 128,
-        sortable: false,
-        Cell: ({ row }) => (
-          <div>
-             <Button
-              onClick={ev => {
-                ev.stopPropagation();
-                dispatch(openAssignContactDialog(row.original));
-              }}
-              variant="outlined"
-              color="primary"
-            >
-              Assign/Unassign
-            </Button>
-          </div>
-        )
-      },
+      // {
+      //   id: 'assign',
+      //   Header: 'Assign/Unassign',
+      //   accessor: 'isAssigned',
+      //   width: 128,
+      //   sortable: false,
+      //   Cell: ({ row }) => (
+      //     <div>
+      //       <Button
+      //         onClick={ev => {
+      //           ev.stopPropagation();
+      //           // dispatch(removeContact(row.original.id));
+      //         }}
+      //         variant="outlined"
+      //         color="primary"
+      //       >
+      //         Assign/Unassign
+      //       </Button>
+      //     </div>
+      //   )
+      // },
 
+      // {
+      //   Header: 'Vehicle Model',
+      //   accessor: 'model',
+      //   className: 'font-medium',
+      //   sortable: true,
+      // },
+      // {
+      //   Header: 'Vehicle Brand',
+      //   accessor: 'brand',
+      //   className: 'font-medium',
+      //   sortable: true
+      // },
+      // {
+      //   Header: 'Plate Number',
+      //   accessor: 'plate_number',
+      //   sortable: true
+      // },
       {
-        Header: 'Vehicle Brand',
-        accessor: 'brand',
-        className: 'font-medium',
+        Header: 'Driver Full Name',
+        accessor: 'fullName',
         sortable: true
       },
       {
-        Header: 'Vehicle Model',
-        accessor: 'model',
-        className: 'font-medium',
+        Header: 'Address',
+        accessor: 'fullAddress',
         sortable: true
       },
       {
-        Header: 'Plate Number',
-        accessor: 'plate_number',
-        sortable: true
+        Header: 'Phone Number',
+        accessor: 'phone_number',
+        sortable: false
       },
       {
-        Header: 'Assigned Driver',
-        accessor: `fullName`,
+        Header: 'Email',
+        accessor: 'email',
         sortable: true
       },
 

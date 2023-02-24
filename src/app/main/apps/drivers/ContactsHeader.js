@@ -44,12 +44,12 @@ function ContactsHeader(props) {
             delay={300}
             className="hidden sm:flex text-16 md:text-24 mx-12 font-semibold"
           >
-            Vehicles
+            Drivers
           </Typography>
         </div>
       </div>
       <Button variant="contained" onClick={() => dispatch(openNewContactDialog())}>
-        Add New Vehicle
+        Add New Driver
       </Button>
 
       <div className="flex flex-1 items-center justify-center px-8 sm:px-12">
