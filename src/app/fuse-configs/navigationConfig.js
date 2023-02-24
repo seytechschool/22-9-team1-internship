@@ -48,7 +48,7 @@ const navigationConfig = [
         title: 'Vehicles',
         translate: 'VEHICLES',
         type: 'item',
-        icon: 'account_box',
+        icon: 'assignment',
         url: '/apps/vehicles/all'
       },
       {
@@ -56,7 +56,7 @@ const navigationConfig = [
         title: 'Issues',
         translate: 'ISSUES',
         type: 'item',
-        icon: 'account_box',
+        icon: 'bug_report',
         url: '/apps/issues/all'
       },
       {
@@ -64,7 +64,7 @@ const navigationConfig = [
         title: 'Drivers',
         translate: 'DRIVERS',
         type: 'item',
-        icon: 'account_box',
+        icon: 'face',
         url: '/apps/drivers/all'
       }
       // {
