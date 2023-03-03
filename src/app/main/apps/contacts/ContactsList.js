@@ -11,10 +11,12 @@ import NotificationPanel from 'app/fuse-layouts/shared-components/notificationPa
 import ContactsMultiSelectMenu from './ContactsMultiSelectMenu';
 import ContactsTable from './ContactsTable';
 import {
+  getDrivers,
   openAssignContactDialog,
   openDeleteContactDialog,
   openEditContactDialog,
   openNewContactDialog,
+  openUnAssignContactDialog,
   removeContact,
   // toggleStarredContact,
   selectContacts,
@@ -26,17 +28,17 @@ const formatData = vehicles =>
     return {
       ...vehicle,
       fullName: vehicle.driver ? `${vehicle.driver.first_name} ${vehicle.driver.last_name}` : '',
-      assigned: vehicle.active,
+      assigned: vehicle.driver ? 'vehicle.driver' : ''
     };
   });
 
   
   function ContactsList(props) {
-    const dispatch = useDispatch();
-    const contacts = useSelector(selectContacts);
-    console.log('contacts', contacts)
-  const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText );
-  const data = useSelector(({ contactsApp }) => contactsApp.contacts.data );
+  const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
+  const assignedDrivers = contacts.map(vehicle => vehicle.driver);
+  const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText);
+  const data = useSelector(({ contactsApp }) => contactsApp.contacts.data);
   // const user = useSelector(({ contactsApp }) => contactsApp.user);
 
   const [filteredData, setFilteredData] = useState(null);
@@ -46,21 +48,37 @@ const formatData = vehicles =>
       {
         id: 'assign',
         Header: 'Assign/Unassign ',
-        accessor: 'assigned' ,
+        accessor: 'assigned',
         width: 128,
         sortable: false,
         Cell: ({ row }) => (
           <div>
-             <Button
-              onClick={ev => {
-                ev.stopPropagation();
-                dispatch(openAssignContactDialog(row.original));
-              }}
-              variant="outlined"
-              color="primary"
-            >
-              Assign/Unassign
-            </Button>
+            {row.original.assigned ? (
+              <Button
+                onClick={ev => {
+                  ev.stopPropagation();
+                  dispatch(openUnAssignContactDialog(row.original));
+                  dispatch(getDrivers());
+                  // Unassign contact here
+                }}
+                variant="outlined"
+                color="secondary"
+              >
+                Unassign
+              </Button>
+            ) : (
+              <Button
+                onClick={ev => {
+                  ev.stopPropagation();
+                  dispatch(openAssignContactDialog(row.original));
+                  dispatch(getDrivers());
+                }}
+                variant="outlined"
+                color="primary"
+              >
+                Assign
+              </Button>
+            )}
           </div>
         )
       },
@@ -87,7 +105,6 @@ const formatData = vehicles =>
         accessor: `fullName`,
         sortable: true
       },
-
       {
         id: 'action',
         width: 128,

@@ -9,7 +9,7 @@ import ContactsHeader from './ContactsHeader';
 import ContactsList from './ContactsList';
 import ContactsSidebarContent from './ContactsSidebarContent';
 import reducer from './store';
-import { getVehicles } from './store/contactsSlice';
+import { getDrivers, getVehicles } from './store/contactsSlice';
 import { getUserData } from './store/userSlice';
 
 function ContactsApp(props) {
@@ -21,6 +21,7 @@ function ContactsApp(props) {
   useDeepCompareEffect(() => {
     dispatch(getVehicles(routeParams));
     dispatch(getUserData());
+    dispatch(getDrivers());
   }, [dispatch, routeParams]);
 
   return (

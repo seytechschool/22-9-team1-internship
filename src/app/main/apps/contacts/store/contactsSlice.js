@@ -27,7 +27,7 @@ export const addVehicle = createAsyncThunk('vehicle-list-app/vehicles/addVehicle
     dispatch(
       addNotification(NotificationModel({ message: 'Vehicle has been added', options: { variant: 'success' } }))
     );
-    dispatch(getVehicles());
+    // dispatch(getVehicles());
     return response;
   } catch (error) {
     dispatch(
@@ -61,6 +61,7 @@ export const removeContact = createAsyncThunk(
   'vehicle-list-app/vehicles/removeVehicle',
   async (contactId, { dispatch }) => {
     try {
+      console.log('contactId', contactId)
       const response = await axios.delete(`https://cargofleet-api.fly.dev/team1/api/vehicles/${contactId}`);
       const data = await response.data.data;
       dispatch(
@@ -77,95 +78,62 @@ export const removeContact = createAsyncThunk(
     }
   }
 );
-
+export const getDrivers = createAsyncThunk('vehicle-list-app/vehicles/getDrivers', async () => {
+  const response = await axios.get('https://cargofleet-api.fly.dev/team1/api/drivers?page=1&limit=100');
+  const data = await response.data.data;
+  // console.log('data drivers', data);
+  return { data };
+});
 
 export const assignDriver = createAsyncThunk(
   'vehicle-list-app/vehicles/assignDriver',
-  async (vehicle, { dispatch }) => {
+  async (assignId, { dispatch }) => {
     try {
-      const response = await axios.put(
-        `https://cargofleet-api.fly.dev/team1/api/vehicles/${vehicle.id}/assign`,
-        vehicle
-      );
-      const data = await response.data.data;
+      console.log('assignId', assignId)
+      const response = await axios.post(`https://cargofleet-api.fly.dev/team1/api/vehicles/${assignId.id}/assign`, {
+        driver_id: assignId.drivers
+      });
+      // const data = await response.data.data;
       dispatch(
-        addNotification(NotificationModel({ message: 'Vehicle has been updated', options: { variant: 'success' } }))
+        addNotification(NotificationModel({ message: 'Vehicle has been assigned', options: { variant: 'success' } }))
       );
       dispatch(getVehicles());
-      return { data };
+      return response;
     } catch (error) {
       dispatch(
-        addNotification(NotificationModel({ message: 'Data has not been updated', options: { variant: 'error' } }))
+        addNotification(NotificationModel({ message: 'Data has not been assigned', options: { variant: 'error' } }))
+      );
+      return error.message;
+    }
+  }
+);
+export const unAssignDriver = createAsyncThunk(
+  'vehicle-list-app/vehicles/unAssignDriver',
+  async (assignId, { dispatch }) => {
+    try {
+      // console.log('assignId', assignId);
+      const response = await axios.post(`https://cargofleet-api.fly.dev/team1/api/vehicles/${assignId.id}/unassign`, {
+        assignment_id: assignId.active_assignment.id
+        // end_odometer: 200,
+        // end_date: '2023-02-05',
+        // start_comment: 'Finish it!'
+      });
+      // const data = await response.data.data;
+      dispatch(
+        addNotification(NotificationModel({ message: 'Vehicle has been unassigned', options: { variant: 'success' } }))
+      );
+      dispatch(getVehicles());
+      return response;
+    } catch (error) {
+      dispatch(
+        addNotification(NotificationModel({ message: 'Data has not been unassigned', options: { variant: 'error' } }))
       );
       return error.message;
     }
   }
 );
 
-// export const removeContacts = createAsyncThunk(
-//   'contactsApp/contacts/removeContacts',
-//   async (contactIds, { dispatch, getState }) => {
-//     await axios.post('/api/contacts-app/remove-contacts', { contactIds });
 
-//     return contactIds;
-//   }
-// );
-
-// export const toggleStarredContact = createAsyncThunk(
-//   'contactsApp/contacts/toggleStarredContact',
-//   async (contactId, { dispatch, getState }) => {
-//     const response = await axios.post('/api/contacts-app/toggle-starred-contact', { contactId });
-//     const data = await response.data;
-
-//     dispatch(getUserData());
-
-//     dispatch(getVehicles());
-
-//     return data;
-//   }
-// );
-
-// export const toggleStarredContacts = createAsyncThunk(
-//   'contactsApp/contacts/toggleStarredContacts',
-//   async (contactIds, { dispatch, getState }) => {
-//     const response = await axios.post('/api/contacts-app/toggle-starred-contacts', { contactIds });
-//     const data = await response.data;
-
-//     dispatch(getUserData());
-
-//     dispatch(getVehicles());
-
-//     return data;
-//   }
-// );
-
-// export const setContactsStarred = createAsyncThunk(
-//   'contactsApp/contacts/setContactsStarred',
-//   async (contactIds, { dispatch, getState }) => {
-//     const response = await axios.post('/api/contacts-app/set-contacts-starred', { contactIds });
-//     const data = await response.data;
-
-//     dispatch(getUserData());
-
-//     dispatch(getVehicles());
-
-//     return data;
-//   }
-// );
-
-// export const setContactsUnstarred = createAsyncThunk(
-//   'contactsApp/contacts/setContactsUnstarred',
-//   async (contactIds, { dispatch, getState }) => {
-//     const response = await axios.post('/api/contacts-app/set-contacts-unstarred', { contactIds });
-//     const data = await response.data;
-
-//     dispatch(getUserData());
-
-//     dispatch(getVehicles());
-
-//     return data;
-//   }
-// );
 
 const contactsAdapter = createEntityAdapter({});
 
@@ -177,6 +145,7 @@ const contactsSlice = createSlice({
   name: 'contactsApp/contacts',
   initialState: contactsAdapter.getInitialState({
     searchText: '',
+    drivers: [],
     routeParams: {},
     contactDialog: {
       type: 'new',
@@ -229,6 +198,15 @@ const contactsSlice = createSlice({
         data: action.payload
       };
     },
+    openUnAssignContactDialog: (state, action) => {
+      state.contactDialog = {
+        type: 'unassign',
+        props: {
+          open: true
+        },
+        data: action.payload
+      };
+    },
     closeEditContactDialog: (state, action) => {
       state.contactDialog = {
         type: 'edit',
@@ -258,6 +236,8 @@ const contactsSlice = createSlice({
     }
   },
   extraReducers: {
+    [assignDriver.fulfilled]: contactsAdapter.addOne,
+    [unAssignDriver.fulfilled]: contactsAdapter.upsertOne,
     [updateContact.fulfilled]: contactsAdapter.upsertOne,
     [addVehicle.fulfilled]: contactsAdapter.addOne,
     // [removeContacts.fulfilled]: (state, action) => contactsAdapter.removeMany(state, action.payload),
@@ -267,8 +247,30 @@ const contactsSlice = createSlice({
       contactsAdapter.setAll(state, data);
       state.routeParams = routeParams;
       state.searchText = '';
+    },
+    [getDrivers.fulfilled]: (state, action) => {
+      const drivers = action.payload;
+      state.drivers = drivers.data;
     }
-  }
+  },
+
+  // extraReducers: {
+  //   [updateContact.fulfilled]: contactsAdapter.upsertOne,
+  //   [addVehicle.fulfilled]: contactsAdapter.addOne,
+  //   [removeContacts.fulfilled]: (state, action) => contactsAdapter.removeMany(state, action.payload),
+  //   [removeContact.fulfilled]: (state, action) => contactsAdapter.removeOne(state, action.payload),
+  //   [getVehicles.fulfilled]: (state, action) => {
+  //     const { data, routeParams } = action.payload;
+  //     contactsAdapter.setAll(state, data);
+  //     state.routeParams = routeParams;
+  //     state.searchText = '';
+  //     state.drivers = data;
+  //   },
+  //   [getDrivers.fulfilled]: (state, action) => {
+  //     const drivers = action.payload;
+  //     state.drivers = drivers.data;
+  //   }
+  // }
 });
 
 export const {
@@ -279,6 +281,7 @@ export const {
   closeNewContactDialog,
   openEditContactDialog,
   closeEditContactDialog,
+  openUnAssignContactDialog,
   openAssignContactDialog
 } = contactsSlice.actions;
 

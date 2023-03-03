@@ -12,8 +12,8 @@ export const getVehicles = createAsyncThunk('vehicle-list-app/vehicles/getVehicl
 });
 
 export const addVehicle = createAsyncThunk('vehicle-list-app/issues/addDriver', async (contact, { dispatch }) => {
-  console.log('contact in adding driver', contact)
-  console.log('contact in issue adding', contact)
+  // console.log('contact in adding driver', contact)
+  // console.log('contact in issue adding', contact)
   try {
     const response = await axios.post('https://cargofleet-api.fly.dev/team1/api/issues', {
       vehicle_id: contact.vehicle_id,
@@ -39,7 +39,7 @@ export const updateContact = createAsyncThunk(
   'vehicle-list-app/issues/updateDriver',
   async (driver, { dispatch }) => {
     try {
-      console.log('vehicle id', driver)
+      // console.log('vehicle id', driver)
       const response = await axios.put(`https://cargofleet-api.fly.dev/team1/api/issues/${driver.id}`, driver);
       const data = await response.data.data;
       dispatch(

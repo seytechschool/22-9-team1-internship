@@ -53,7 +53,7 @@ const defaultValues = {
   country: '',
   license_number: '',
   license_class: '',
-  license_state: '',
+  license_state: ''
 };
 
 /**
@@ -77,7 +77,7 @@ function ContactDialog(props) {
 
   const { control, watch, reset, handleSubmit, formState, getValues, setValue, setFieldValue } = useForm({
     mode: 'onChange',
-    defaultValues,
+    defaultValues
     // resolver: yupResolver(schema)
   });
 
@@ -396,28 +396,6 @@ function ContactDialog(props) {
                 )}
               />
             </div>
-            {/* <Controller
-              control={control}
-              name="fuel_type"
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  // {...addErrorIntoField(errors[name])}
-                  required
-                  select
-                  variant="filled"
-                  fullWidth
-                  label="Fuel Type"
-                >
-                  <MenuItem value="">-Select-</MenuItem>
-                  {options.map((option, index) => (
-                    <MenuItem key={index} value={option.value}>
-                      {option.label}
-                    </MenuItem>
-                  ))}
-                </TextField>
-              )}
-            /> */}
           </DialogContent>
 
           {contactDialog.type === 'new' ? (

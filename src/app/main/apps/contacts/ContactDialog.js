@@ -31,7 +31,8 @@ import {
   closeNewContactDialog,
   closeEditContactDialog,
   closeDeleteContactDialog,
-  assignDriver
+  assignDriver,
+  unAssignDriver
 } from './store/contactsSlice';
 
 const options = [
@@ -71,6 +72,11 @@ const schema = yup.object({
 function ContactDialog(props) {
   const dispatch = useDispatch();
   const contactDialog = useSelector(({ contactsApp }) => contactsApp.contacts.contactDialog);
+  const drivers = useSelector(({ contactsApp }) => contactsApp.contacts.drivers);
+  // console.log('drivers for filter', drivers)
+  const filteredDrivers = drivers === undefined ? [] : drivers.filter(driver => !driver.vehicle);
+  // console.log('filtered drivers ', filteredDrivers);
+
 
   const { control, watch, reset, handleSubmit, formState, getValues, setValue, setFieldValue } = useForm({
     mode: 'onChange',
@@ -116,6 +122,11 @@ function ContactDialog(props) {
         ...contactDialog.data
       });
     }
+       if (contactDialog.type === 'unassign') {
+      reset({
+        ...contactDialog.data
+      });
+    }
   }, [contactDialog.data, contactDialog.type, reset]);
 
   //   /**
@@ -145,6 +156,8 @@ function ContactDialog(props) {
       dispatch(updateContact(data));
     } else if (contactDialog.type === 'assign') {
       dispatch(assignDriver(data));
+    } else if (contactDialog.type === 'unassign') {
+      dispatch(unAssignDriver(data));
     } else {
       dispatch(removeContact(data));
     }
@@ -194,24 +207,21 @@ function ContactDialog(props) {
             <div className="flex">
               <Controller
                 control={control}
-                name="vehicle"
+                name="brand"
                 render={({ field }) => (
                   <TextField
                     {...field}
-                    // {...addErrorIntoField(errors[name])}
-                    required
-                    select
-                    variant="filled"
+                    className="mb-24"
+                    id="brand"
+                    variant="outlined"
+                    label="Brand"
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                    placeholder="2016"
                     fullWidth
-                    label="Vehicle"
-                  >
-                    <MenuItem value="">-Select-</MenuItem>
-                    {options.map((option, index) => (
-                      <MenuItem key={index} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </TextField>
+                    disabled
+                  />
                 )}
               />
             </div>
@@ -219,7 +229,8 @@ function ContactDialog(props) {
             <div className="flex">
               <Controller
                 control={control}
-                name="driver"
+                name="drivers"
+                defaultValue=""
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -228,14 +239,16 @@ function ContactDialog(props) {
                     select
                     variant="filled"
                     fullWidth
-                    label="Driver"
+                    label="Select a driver to assign"
                   >
-                    <MenuItem value="">-Select-</MenuItem>
-                    {options.map((option, index) => (
-                      <MenuItem key={index} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
+                    <MenuItem value="">-None-</MenuItem>
+                    {filteredDrivers.length > 0
+                      ? filteredDrivers.map(option => (
+                          <MenuItem key={`${option.first_name} ${option.last_name}`} value={option.id}>
+                            {`${option.first_name} ${option.last_name}`}
+                          </MenuItem>
+                        ))
+                      : ''}
                   </TextField>
                 )}
               />
@@ -284,7 +297,6 @@ function ContactDialog(props) {
             </div>
             <br />
             <div className="flex">
-
               <Controller
                 control={control}
                 name="notes"
@@ -296,7 +308,6 @@ function ContactDialog(props) {
                     id="notes"
                     variant="outlined"
                     multiline
-                    rows={5}
                     fullWidth
                   />
                 )}
@@ -305,6 +316,88 @@ function ContactDialog(props) {
           </DialogContent>
 
           {contactDialog.type === 'new' ? (
+            <DialogActions className="justify-between p-4 pb-16">
+              <div className="px-16">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                  disabled={_.isEmpty(dirtyFields) || !isValid}
+                >
+                  Submit
+                </Button>
+              </div>
+              <div className="px-16">
+                <Button variant="contained" color="secondary" type="button" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </div>
+            </DialogActions>
+          ) : (
+            <DialogActions className="justify-between p-4 pb-16">
+              <div className="px-16">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                  disabled={_.isEmpty(dirtyFields) || !isValid}
+                >
+                  Save
+                </Button>
+              </div>
+              <div className="px-16">
+                <Button variant="contained" color="secondary" type="button" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </div>
+            </DialogActions>
+          )}
+        </form>
+      )}
+      {contactDialog.type === 'unassign' && (
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col md:overflow-hidden">
+          <DialogContent classes={{ root: 'p-24' }}>
+            <div className="flex">
+              <Controller
+                control={control}
+                name="end_odometer"
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    id="end_odometer"
+                    variant="outlined"
+                    label="End Odometer"
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                    fullWidth
+                  />
+                )}
+              />
+            </div>
+            <br />
+
+            <div className="flex">
+              <Controller
+                control={control}
+                name="notes"
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Notes"
+                    id="notes"
+                    variant="outlined"
+                    multiline
+                    fullWidth
+                  />
+                )}
+              />
+            </div>
+          </DialogContent>
+
+          {contactDialog.type === 'new' || contactDialog.type === 'unassign' ? (
             <DialogActions className="justify-between p-4 pb-16">
               <div className="px-16">
                 <Button
