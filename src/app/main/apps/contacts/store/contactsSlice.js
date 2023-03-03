@@ -27,7 +27,7 @@ export const addVehicle = createAsyncThunk('vehicle-list-app/vehicles/addVehicle
     dispatch(
       addNotification(NotificationModel({ message: 'Vehicle has been added', options: { variant: 'success' } }))
     );
-    // dispatch(getVehicles());
+    dispatch(getVehicles());
     return response;
   } catch (error) {
     dispatch(
