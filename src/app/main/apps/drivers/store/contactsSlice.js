@@ -7,12 +7,19 @@ import { getUserData } from './userSlice';
 export const getVehicles = createAsyncThunk('vehicle-list-app/vehicles/getVehicles', async () => {
   const response = await axios.get('https://cargofleet-api.fly.dev/team1/api/drivers?page=1&limit=100');
   const data = await response.data.data;
-  // console.log('data drivers', data)
   return { data };
 });
 
+// -----------------------------------------Get Vehicles For Issue------------------------------------------
+
+export const getVehiclesForIssue = createAsyncThunk('vehicle-list-app/vehicles/getVehiclesForIssue', async () => {
+  const response = await axios.get('https://cargofleet-api.fly.dev/team1/api/vehicles?page=1&limit=100');
+  const data = await response.data.data;
+  return { data };
+});
+// ----------------------------------------------------------------------------------------------------------------------
+
 export const addVehicle = createAsyncThunk('vehicle-list-app/drivers/addDriver', async (contact, { dispatch }) => {
-  // console.log('contact in adding driver', contact)
   try {
     const response = await axios.post('https://cargofleet-api.fly.dev/team1/api/drivers', {
       first_name: contact.first_name,
@@ -48,7 +55,6 @@ export const updateContact = createAsyncThunk(
   'vehicle-list-app/drivers/updateDriver',
   async (driver, { dispatch }) => {
     try {
-      // console.log('vehicle id', driver)
       const response = await axios.put(`https://cargofleet-api.fly.dev/team1/api/drivers/${driver.id}`, driver);
       const data = await response.data.data;
       dispatch(
@@ -100,11 +106,9 @@ export const assignDriver = createAsyncThunk(
   'vehicle-list-app/vehicles/assignDriver',
   async (assignId, { dispatch }) => {
     try {
-      console.log('assignId', assignId);
       const response = await axios.post(`https://cargofleet-api.fly.dev/team1/api/vehicles/${assignId.id}/assign`, {
         driver_id: assignId.drivers
       });
-      // const data = await response.data.data;
       dispatch(
         addNotification(NotificationModel({ message: 'Vehicle has been assigned', options: { variant: 'success' } }))
       );
@@ -122,12 +126,8 @@ export const unAssignDriver = createAsyncThunk(
   'vehicle-list-app/vehicles/unAssignDriver',
   async (assignId, { dispatch }) => {
     try {
-      // console.log('assignId', assignId);
       const response = await axios.post(`https://cargofleet-api.fly.dev/team1/api/vehicles/${assignId.id}/unassign`, {
         assignment_id: assignId.active_assignment.id
-        // end_odometer: 200,
-        // end_date: '2023-02-05',
-        // start_comment: 'Finish it!'
       });
       // const data = await response.data.data;
       dispatch(
@@ -147,7 +147,6 @@ export const unAssignDriver = createAsyncThunk(
 export const getDrivers = createAsyncThunk('vehicle-list-app/vehicles/getDrivers', async () => {
   const response = await axios.get('https://cargofleet-api.fly.dev/team1/api/drivers?page=1&limit=100');
   const data = await response.data.data;
-  // console.log('data drivers', data);
   return { data };
 });
 
@@ -162,6 +161,7 @@ const contactsSlice = createSlice({
   initialState: contactsAdapter.getInitialState({
     searchText: '',
     drivers: [],
+    vehicles: [],
     routeParams: {},
     contactDialog: {
       type: 'new',
@@ -266,6 +266,10 @@ const contactsSlice = createSlice({
     [getDrivers.fulfilled]: (state, action) => {
       const drivers = action.payload;
       state.drivers = drivers.data;
+    },
+    [getVehiclesForIssue.fulfilled]: (state, action) => {
+      const vehiclesForIssue = action.payload;
+      state.vehicles = vehiclesForIssue.data;
     }
   }
 });

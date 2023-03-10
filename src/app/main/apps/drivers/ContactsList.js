@@ -28,15 +28,12 @@ const formatData = vehicles =>
       fullAddress: `${(vehicle.address1)}, ${vehicle.city} ${vehicle.state}` || ''
     };
   });
-  // console.log('formattedData drivers', formatData)
 
 function ContactsList(props) {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
   const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText );
   const data = useSelector(({ contactsApp }) => contactsApp.contacts.data);
-  // console.log('data drivers contact list', data)
-  // const user = useSelector(({ contactsApp }) => contactsApp.user);
 
   const [filteredData, setFilteredData] = useState(null);
 
@@ -103,6 +100,7 @@ function ContactsList(props) {
       },
 
       {
+        Header: 'Edit & Remove',
         id: 'action',
         width: 128,
         sortable: false,

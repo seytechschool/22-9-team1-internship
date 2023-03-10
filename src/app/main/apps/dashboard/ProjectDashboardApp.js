@@ -14,6 +14,7 @@ import { getWidgets, selectWidgets } from './store/widgetsSlice';
 import BudgetSummaryTab from './tabs/BudgetSummaryTab';
 import HomeTab from './tabs/HomeTab';
 import TeamMembersTab from './tabs/TeamMembersTab';
+import { getProjects } from './store/projectsSlice';
 
 const useStyles = makeStyles(theme => ({
   content: {
@@ -33,6 +34,7 @@ function ProjectDashboardApp(props) {
 
   useEffect(() => {
     dispatch(getWidgets());
+    dispatch(getProjects())
   }, [dispatch]);
 
   function handleChangeTab(event, value) {
@@ -67,16 +69,16 @@ function ProjectDashboardApp(props) {
           }}
         >
           <Tab className="text-14 font-semibold min-h-40 min-w-64 mx-4" disableRipple label="Home" />
-          <Tab className="text-14 font-semibold min-h-40 min-w-64 mx-4" disableRipple label="Budget Summary" />
-          <Tab className="text-14 font-semibold min-h-40 min-w-64 mx-4" disableRipple label="Team Members" />
+          {/* <Tab className="text-14 font-semibold min-h-40 min-w-64 mx-4" disableRipple label="Budget Summary" />
+          <Tab className="text-14 font-semibold min-h-40 min-w-64 mx-4" disableRipple label="Team Members" /> */}
         </Tabs>
       }
       content={
         <div className="p-12 lg:ltr:pr-0 lg:rtl:pl-0">
           {/* <HomeTab /> */}
           {tabValue === 0 && <HomeTab />}
-          {tabValue === 1 && <BudgetSummaryTab />}
-          {tabValue === 2 && <TeamMembersTab />}
+          {/* {tabValue === 1 && <BudgetSummaryTab />}
+          {tabValue === 2 && <TeamMembersTab />} */}
         </div>
       }
       rightSidebarContent={<ProjectDashboardAppSidebar />}

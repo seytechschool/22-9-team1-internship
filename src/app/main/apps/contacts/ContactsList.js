@@ -28,7 +28,8 @@ const formatData = vehicles =>
     return {
       ...vehicle,
       fullName: vehicle.driver ? `${vehicle.driver.first_name} ${vehicle.driver.last_name}` : '',
-      assigned: vehicle.driver ? 'vehicle.driver' : ''
+      assigned: vehicle.driver ? 'vehicle.driver' : '',
+      vehicle_brand_model: `${vehicle.brand} ${vehicle.model}` || ''
     };
   });
 
@@ -84,17 +85,12 @@ const formatData = vehicles =>
       },
 
       {
-        Header: 'Vehicle Brand',
-        accessor: 'brand',
+        Header: 'Vehicle Brand & Model',
+        accessor: 'vehicle_brand_model',
         className: 'font-medium',
         sortable: true
       },
-      {
-        Header: 'Vehicle Model',
-        accessor: 'model',
-        className: 'font-medium',
-        sortable: true
-      },
+
       {
         Header: 'Plate Number',
         accessor: 'plate_number',
@@ -106,6 +102,7 @@ const formatData = vehicles =>
         sortable: true
       },
       {
+        Header: 'Edit & Remove',
         id: 'action',
         width: 128,
         sortable: false,

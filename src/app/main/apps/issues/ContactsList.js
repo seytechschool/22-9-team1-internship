@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import moment from 'moment';
 import FuseUtils from '@fuse/utils';
 import Avatar from '@material-ui/core/Avatar';
 import Icon from '@material-ui/core/Icon';
@@ -14,88 +15,36 @@ import {
   openDeleteContactDialog,
   openEditContactDialog,
   openNewContactDialog,
-  removeContact,
+  removeIssue,
   // toggleStarredContact,
   selectContacts,
-  updateContact
+  updateIssue
 } from './store/contactsSlice';
 
-const formatData = vehicles =>
-  vehicles.map(vehicle => {
+const formatDataIssue = vehicles =>
+  vehicles.map(issue => {
     return {
-      ...vehicle,
-      fullName: `${(vehicle.first_name)} ${vehicle.last_name}` || '',
-      fullAddress: `${(vehicle.address1)}, ${vehicle.city} ${vehicle.state}` || ''
+      ...issue,
+      due_date_format: `${moment.utc(issue.due_date).format('YYYY-MM-DD')}`,
     };
   });
-  // console.log('formattedData drivers', formatData)
 
 function ContactsList(props) {
   const dispatch = useDispatch();
   const contacts = useSelector(selectContacts);
-  const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText );
+  const searchText = useSelector(({ contactsApp }) => contactsApp.contacts.searchText);
   const data = useSelector(({ contactsApp }) => contactsApp.contacts.data);
-  // console.log('CONTACTS issue is rendering', contacts)
-  // const user = useSelector(({ contactsApp }) => contactsApp.user);
 
   const [filteredData, setFilteredData] = useState(null);
 
   const columns = useMemo(
     () => [
-      // {
-      //   id: 'assign',
-      //   Header: 'Assign/Unassign',
-      //   accessor: 'isAssigned',
-      //   width: 128,
-      //   sortable: false,
-      //   Cell: ({ row }) => (
-      //     <div>
-      //       <Button
-      //         onClick={ev => {
-      //           ev.stopPropagation();
-      //           // dispatch(removeContact(row.original.id));
-      //         }}
-      //         variant="outlined"
-      //         color="primary"
-      //       >
-      //         Assign/Unassign
-      //       </Button>
-      //     </div>
-      //   )
-      // },
-
-      // {
-      //   Header: 'Vehicle Model',
-      //   accessor: 'model',
-      //   className: 'font-medium',
-      //   sortable: true,
-      // },
-      // {
-      //   Header: 'Vehicle Brand',
-      //   accessor: 'brand',
-      //   className: 'font-medium',
-      //   sortable: true
-      // },
-      // {
-      //   Header: 'Plate Number',
-      //   accessor: 'plate_number',
-      //   sortable: true
-      // },
-      // {
-      //   Header: 'Driver Full Name',
-      //   accessor: 'fullName',
-      //   sortable: true
-      // },
       {
-        Header: 'Title',
+        Header: 'Issue Title',
         accessor: 'title',
         sortable: true
       },
-      // {
-      //   Header: 'Description',
-      //   accessor: 'description',
-      //   sortable: false
-      // },
+
       {
         Header: 'Priority',
         accessor: 'priority',
@@ -103,11 +52,12 @@ function ContactsList(props) {
       },
       {
         Header: 'Due Date',
-        accessor: 'due_date',
+        accessor: 'due_date_format',
         sortable: true
       },
 
       {
+        Header: 'Edit & Remove',
         id: 'action',
         width: 128,
         sortable: false,
@@ -168,11 +118,10 @@ function ContactsList(props) {
     );
   }
 
-  const formattedData = formatData(filteredData);
+  const formattedData = formatDataIssue(filteredData);
 
   return (
     <motion.div initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1, transition: { delay: 0.2 } }}>
-
       <ContactsTable
         columns={columns}
         data={formattedData}

@@ -2,8 +2,9 @@ import { createEntityAdapter, createSlice, createAsyncThunk } from '@reduxjs/too
 import axios from 'axios';
 
 export const getProjects = createAsyncThunk('projectDashboardApp/projects/getProjects', async () => {
-  const response = await axios.get('/api/project-dashboard-app/projects');
-  return response.data;
+  const response = await axios.get('https://cargofleet-api.fly.dev/team1/api/dashboard');
+  
+  return response;
 });
 
 const projectsAdapter = createEntityAdapter({});
@@ -19,7 +20,10 @@ const projectsSlice = createSlice({
   initialState: projectsAdapter.getInitialState(),
   reducers: {},
   extraReducers: {
-    [getProjects.fulfilled]: projectsAdapter.setAll
+    [getProjects.fulfilled]: (state, action) => {
+      const data = action.payload;
+      projectsAdapter.setAll(state, data);
+    }
   }
 });
 

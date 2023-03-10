@@ -28,11 +28,11 @@ function ContactsHeader(props) {
         <Hidden lgUp>
           <IconButton
             onClick={ev => {
-              props.pageLayout.current.toggleLeftSidebar();
+              // props.pageLayout.current.toggleLeftSidebar();
             }}
             aria-label="open left sidebar"
           >
-            <Icon>menu</Icon>
+            {/* <Icon>menu</Icon> */}
           </IconButton>
         </Hidden>
 

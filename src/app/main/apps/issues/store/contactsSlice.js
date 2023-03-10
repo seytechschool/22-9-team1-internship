@@ -7,49 +7,57 @@ import { getUserData } from './userSlice';
 export const getVehicles = createAsyncThunk('vehicle-list-app/vehicles/getVehicles', async () => {
   const response = await axios.get('https://cargofleet-api.fly.dev/team1/api/issues?page=1&limit=100');
   const data = await response.data.data;
-  console.log('data issues', data)
   return { data };
 });
 
-export const addVehicle = createAsyncThunk('vehicle-list-app/issues/addDriver', async (contact, { dispatch }) => {
-  // console.log('contact in adding driver', contact)
-  // console.log('contact in issue adding', contact)
+// -----------------------------------------Get Vehicles For Issue------------------------------------------
+
+export const getVehiclesForIssue = createAsyncThunk('vehicle-list-app/vehicles/getVehiclesForIssue', async () => {
+  const response = await axios.get('https://cargofleet-api.fly.dev/team1/api/vehicles?page=1&limit=100');
+  const data = await response.data.data;
+  return { data };
+});
+// ----------------------------------------------------------------------------------------------------------------------
+export const addVehicle = createAsyncThunk('vehicle-list-app/issues/addDriver', async (contact, { dispatch, getState }) => {
+
   try {
     const response = await axios.post('https://cargofleet-api.fly.dev/team1/api/issues', {
-      vehicle_id: contact.vehicle_id,
+      vehicle_id: contact.issue_vehicle_id,
       title: contact.title,
       priority: contact.priority,
-      due_date: contact.due_date
+      due_date: contact.due_date,
     });
 
     dispatch(
-      addNotification(NotificationModel({ message: 'Driver has been added', options: { variant: 'success' } }))
+      addNotification(NotificationModel({ message: 'Issue has been added', options: { variant: 'success' } }))
     );
     dispatch(getVehicles());
     return response;
   } catch (error) {
     dispatch(
-      addNotification(NotificationModel({ message: 'Data has not been added!!!', options: { variant: 'error' } }))
+      addNotification(NotificationModel({ message: 'Issue has not been added!!!', options: { variant: 'error' } }))
     );
     return error.message;
   }
 });
 
 export const updateContact = createAsyncThunk(
-  'vehicle-list-app/issues/updateDriver',
+  'vehicle-list-app/issues/updateIssue',
   async (driver, { dispatch }) => {
     try {
-      // console.log('vehicle id', driver)
-      const response = await axios.put(`https://cargofleet-api.fly.dev/team1/api/issues/${driver.id}`, driver);
+      const response = await axios.put(`https://cargofleet-api.fly.dev/team1/api/issues/${driver.id}`, {
+        ...driver,
+        due_date: driver.date
+      });
       const data = await response.data.data;
       dispatch(
-        addNotification(NotificationModel({ message: 'Driver has been updated', options: { variant: 'success' } }))
+        addNotification(NotificationModel({ message: 'Issue has been updated', options: { variant: 'success' } }))
       );
       dispatch(getVehicles());
       return { data };
     } catch (error) {
       dispatch(
-        addNotification(NotificationModel({ message: 'Data has not been updated', options: { variant: 'error' } }))
+        addNotification(NotificationModel({ message: 'Issue has not been updated', options: { variant: 'error' } }))
       );
       return error.message;
     }
@@ -63,14 +71,14 @@ export const removeContact = createAsyncThunk(
       const response = await axios.delete(`https://cargofleet-api.fly.dev/team1/api/issues/${contactId}`);
       const data = await response.data.data;
       dispatch(
-        addNotification(NotificationModel({ message: 'Driver has been removed', options: { variant: 'success' } }))
+        addNotification(NotificationModel({ message: 'Issue has been removed', options: { variant: 'success' } }))
       );
       dispatch(getVehicles());
 
       return { data };
     } catch (error) {
       dispatch(
-        addNotification(NotificationModel({ message: 'Driver has not been removed', options: { variant: 'error' } }))
+        addNotification(NotificationModel({ message: 'Issue has not been removed', options: { variant: 'error' } }))
       );
       return error.message;
     }
@@ -86,61 +94,57 @@ export const removeContacts = createAsyncThunk(
   }
 );
 
-// export const toggleStarredContact = createAsyncThunk(
-//   'contactsApp/contacts/toggleStarredContact',
-//   async (contactId, { dispatch, getState }) => {
-//     const response = await axios.post('/api/contacts-app/toggle-starred-contact', { contactId });
-//     const data = await response.data;
+export const assignDriver = createAsyncThunk(
+  'vehicle-list-app/vehicles/assignDriver',
+  async (assignId, { dispatch }) => {
+    try {
+      const response = await axios.post(`https://cargofleet-api.fly.dev/team1/api/vehicles/${assignId.id}/assign`, {
+        driver_id: assignId.drivers
+      });
+      dispatch(
+        addNotification(NotificationModel({ message: 'Vehicle has been assigned', options: { variant: 'success' } }))
+      );
+      dispatch(getVehicles());
+      return response;
+    } catch (error) {
+      dispatch(
+        addNotification(NotificationModel({ message: 'Data has not been assigned', options: { variant: 'error' } }))
+      );
+      return error.message;
+    }
+  }
+);
+export const unAssignDriver = createAsyncThunk(
+  'vehicle-list-app/vehicles/unAssignDriver',
+  async (assignId, { dispatch }) => {
+    try {
+      const response = await axios.post(`https://cargofleet-api.fly.dev/team1/api/vehicles/${assignId.id}/unassign`, {
+        assignment_id: assignId.active_assignment.id
+        // end_odometer: 200,
+        // end_date: '2023-02-05',
+        // start_comment: 'Finish it!'
+      });
+      // const data = await response.data.data;
+      dispatch(
+        addNotification(NotificationModel({ message: 'Vehicle has been unassigned', options: { variant: 'success' } }))
+      );
+      dispatch(getVehicles());
+      return response;
+    } catch (error) {
+      dispatch(
+        addNotification(NotificationModel({ message: 'Data has not been unassigned', options: { variant: 'error' } }))
+      );
+      return error.message;
+    }
+  }
+);
 
-//     dispatch(getUserData());
+export const getDrivers = createAsyncThunk('vehicle-list-app/vehicles/getDrivers', async () => {
+  const response = await axios.get('https://cargofleet-api.fly.dev/team1/api/drivers?page=1&limit=100');
+  const data = await response.data.data;
+  return { data };
+});
 
-//     dispatch(getVehicles());
-
-//     return data;
-//   }
-// );
-
-// export const toggleStarredContacts = createAsyncThunk(
-//   'contactsApp/contacts/toggleStarredContacts',
-//   async (contactIds, { dispatch, getState }) => {
-//     const response = await axios.post('/api/contacts-app/toggle-starred-contacts', { contactIds });
-//     const data = await response.data;
-
-//     dispatch(getUserData());
-
-//     dispatch(getVehicles());
-
-//     return data;
-//   }
-// );
-
-// export const setContactsStarred = createAsyncThunk(
-//   'contactsApp/contacts/setContactsStarred',
-//   async (contactIds, { dispatch, getState }) => {
-//     const response = await axios.post('/api/contacts-app/set-contacts-starred', { contactIds });
-//     const data = await response.data;
-
-//     dispatch(getUserData());
-
-//     dispatch(getVehicles());
-
-//     return data;
-//   }
-// );
-
-// export const setContactsUnstarred = createAsyncThunk(
-//   'contactsApp/contacts/setContactsUnstarred',
-//   async (contactIds, { dispatch, getState }) => {
-//     const response = await axios.post('/api/contacts-app/set-contacts-unstarred', { contactIds });
-//     const data = await response.data;
-
-//     dispatch(getUserData());
-
-//     dispatch(getVehicles());
-
-//     return data;
-//   }
-// );
 
 const contactsAdapter = createEntityAdapter({});
 
@@ -152,6 +156,8 @@ const contactsSlice = createSlice({
   name: 'contactsApp/contacts',
   initialState: contactsAdapter.getInitialState({
     searchText: '',
+    drivers: [],
+    vehicles: [],
     routeParams: {},
     contactDialog: {
       type: 'new',
@@ -189,6 +195,24 @@ const contactsSlice = createSlice({
     openEditContactDialog: (state, action) => {
       state.contactDialog = {
         type: 'edit',
+        props: {
+          open: true
+        },
+        data: action.payload
+      };
+    },
+    openAssignContactDialog: (state, action) => {
+      state.contactDialog = {
+        type: 'assign',
+        props: {
+          open: true
+        },
+        data: action.payload
+      };
+    },
+    openUnAssignContactDialog: (state, action) => {
+      state.contactDialog = {
+        type: 'unassign',
         props: {
           open: true
         },
@@ -233,6 +257,14 @@ const contactsSlice = createSlice({
       contactsAdapter.setAll(state, data);
       state.routeParams = routeParams;
       state.searchText = '';
+    },
+    [getVehiclesForIssue.fulfilled]: (state, action) => {
+      const vehiclesForIssue = action.payload;
+      state.vehicles = vehiclesForIssue.data;
+    },
+    [getDrivers.fulfilled]: (state, action) => {
+      const drivers = action.payload;
+      state.drivers = drivers.data;
     }
   }
 });

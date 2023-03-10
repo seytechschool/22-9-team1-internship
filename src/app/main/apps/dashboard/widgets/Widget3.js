@@ -3,29 +3,54 @@ import IconButton from '@material-ui/core/IconButton';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { memo } from 'react';
+import { useSelector } from 'react-redux';
+import { selectProjects } from '../store/projectsSlice';
+
+
 
 function Widget3(props) {
+  const issueData = useSelector(selectProjects);
+  const mappedIssue = issueData.map(item => item.vehicles);
   return (
     <Paper className="w-full rounded-20 shadow flex flex-col justify-between">
       <div className="flex items-center justify-between px-4 pt-8">
         <Typography className="text-16 px-16 font-medium" color="textSecondary">
-          {props.widget.title}
+          Vehicles
         </Typography>
         <IconButton aria-label="more">
           <Icon>more_vert</Icon>
         </IconButton>
       </div>
-      <div className="text-center py-12">
-        <Typography className="text-18 text-blue-800 font-normal mb-8">Issues</Typography>
-        <Typography className="text-72 font-semibold leading-none text-orange tracking-tighter my-11">
-          {props.widget.data.count}
-        </Typography>
-        <Typography className="text-18 font-normal text-orange-800">{props.widget.data.name}</Typography>
+      <div className="text-center py-12" style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+        <div>
+          <Typography className="text-48 font-semibold leading-none text-orange tracking-tighter my-11">
+            {mappedIssue.map(item => item.assigned)}
+          </Typography>
+          <Typography className="text-18 font-normal text-orange-400">Assigned</Typography>
+        </div>
+        <div>
+          <Typography className="text-48 font-semibold leading-none text-blue tracking-tighter my-11">
+            {mappedIssue.map(item => item.unassigned)}
+          </Typography>
+          <Typography className="text-18 font-normal text-blue-400">Unassigned</Typography>
+        </div>
       </div>
-      <Typography className="p-20 pt-0 h-56 flex justify-center items-end text-13 font-medium" color="textSecondary">
-        <span className="truncate">{props.widget.data.extra.name}</span>:
-        <b className="px-8">{props.widget.data.extra.count}</b>
-      </Typography>
+      <br />
+      <div className="text-center py-12" style={{ display: 'flex', justifyContent: 'space-evenly' }}>
+        <div>
+          <Typography className="text-48 font-semibold leading-none text-green tracking-tighter my-11">
+            {mappedIssue.map(item => item.active)}
+          </Typography>
+          <Typography className="text-18 font-normal text-green-400">Active</Typography>
+        </div>
+        <div>
+          <Typography className="text-48 font-semibold leading-none text-blue tracking-tighter my-11">
+            {mappedIssue.map(item => item.archived)}
+          </Typography>
+          <Typography className="text-18 font-normal text-blue-400">Archived</Typography>
+        </div>
+      </div>
+      {/* active : 28 archived : 33 assigned : 21 unassigned : 55 */}
     </Paper>
   );
 }

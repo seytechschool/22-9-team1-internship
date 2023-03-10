@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMainTheme } from 'app/store/fuse/settingsSlice';
 // import { useNavigate } from 'react-router-dom';
-import { addVehicle, openEditContactDialog, openNewContactDialog, setContactsSearchText } from './store/contactsSlice';
+import { addIssue, openEditContactDialog, openNewContactDialog, setContactsSearchText } from './store/contactsSlice';
 
 function ContactsHeader(props) {
   const dispatch = useDispatch();
@@ -28,11 +28,11 @@ function ContactsHeader(props) {
         <Hidden lgUp>
           <IconButton
             onClick={ev => {
-              props.pageLayout.current.toggleLeftSidebar();
+              // props.pageLayout.current.toggleLeftSidebar();
             }}
             aria-label="open left sidebar"
           >
-            <Icon>menu</Icon>
+            {/* <Icon>menu</Icon> */}
           </IconButton>
         </Hidden>
 

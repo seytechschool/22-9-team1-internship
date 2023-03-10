@@ -1,6 +1,7 @@
 import FuseUtils from '@fuse/utils/FuseUtils';
 import { yupResolver } from '@hookform/resolvers/yup';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import BugReportIcon from '@material-ui/icons/BugReport';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import AppBar from '@material-ui/core/AppBar';
@@ -27,16 +28,16 @@ import {
   removeContact,
   updateContact,
   addVehicle,
+  getVehiclesForIssue,
   closeNewContactDialog,
   closeEditContactDialog,
   closeDeleteContactDialog
 } from './store/contactsSlice';
 
 const options = [
-  { value: 'diesel', label: 'Diesel' },
-  { value: 'gasoline', label: 'Gasoline' },
-  { value: 'propane', label: 'Propane' },
-  { value: 'natural_gas', label: 'Natural gas' }
+  { value: 'low', label: 'Low' },
+  { value: 'medium', label: 'Medium' },
+  { value: 'high', label: 'High' }
 ];
 
 const defaultValues = {
@@ -44,7 +45,7 @@ const defaultValues = {
   title: '',
   // description: '',
   priority: '',
-  due_date: '',
+  due_date: ''
 };
 
 /**
@@ -65,7 +66,8 @@ const defaultValues = {
 function ContactDialog(props) {
   const dispatch = useDispatch();
   const contactDialog = useSelector(({ contactsApp }) => contactsApp.contacts.contactDialog);
-
+  const vehiclesForIssue = useSelector(({ contactsApp }) => contactsApp.contacts.vehicles);
+  const issueVehicle = vehiclesForIssue === undefined ? [] : vehiclesForIssue;
   const { control, watch, reset, handleSubmit, formState, getValues, setValue, setFieldValue } = useForm({
     mode: 'onChange',
     defaultValues
@@ -75,9 +77,7 @@ function ContactDialog(props) {
   const { isValid, dirtyFields, errors } = formState;
 
   const id = watch('id');
-  // const name = watch('name');
-  // const vehicleBrand = watch('brand');
-  // const avatar = watch('avatar');
+
 
   //   /**
   //    * Initialize Dialog with Data
@@ -86,9 +86,10 @@ function ContactDialog(props) {
     /**
      * Dialog type: 'edit'
      */
-    if (contactDialog.type === 'edit' && contactDialog.data) {
+    if (contactDialog.type === 'edit') {
       reset({
-        ...contactDialog.data
+        ...contactDialog.data,
+        date: new Date(contactDialog.data.due_date).toISOString().slice(0, 10)
       });
     }
 
@@ -97,7 +98,7 @@ function ContactDialog(props) {
     //      */
     if (contactDialog.type === 'new') {
       reset({
-        ...defaultValues
+        ...contactDialog.data
       });
     }
     if (contactDialog.type === 'delete') {
@@ -169,37 +170,38 @@ function ContactDialog(props) {
         </Toolbar>
         <div className="flex flex-col items-center justify-center pb-24">
           {contactDialog.type === 'edit' && <EditIcon style={{ fontSize: 100 }} />}
-          {contactDialog.type === 'new' && <AccountBoxIcon style={{ fontSize: 100 }} />}
+          {contactDialog.type === 'new' && <BugReportIcon style={{ fontSize: 100 }} />}
           {contactDialog.type === 'delete' && <DeleteForeverIcon style={{ fontSize: 100 }} />}
         </div>
       </AppBar>
-      {(contactDialog.type === 'edit' || contactDialog.type === 'new') && (
+      {contactDialog.type === 'edit' && (
         <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col md:overflow-hidden">
           <DialogContent classes={{ root: 'p-24' }}>
             <div className="flex">
               <Controller
-                name="vehicle_id"
+                name="vehicle.brand"
                 control={control}
                 render={({ field }) => (
                   <TextField
                     {...field}
                     className="mb-24"
-                    label="Vehicle_id"
-                    id="vehicle_id"
+                    label="Brand"
+                    id="brand"
                     error={!!errors.name}
                     helperText={errors?.name?.message}
                     variant="outlined"
-                    required
+                    disabled
                     fullWidth
                   />
                 )}
               />
             </div>
-
+            <br />
             <div className="flex">
               <Controller
                 control={control}
                 name="title"
+                defaultValue=""
                 render={({ field }) => (
                   <TextField {...field} className="mb-24" label="Title" id="title" variant="outlined" fullWidth />
                 )}
@@ -210,16 +212,32 @@ function ContactDialog(props) {
               <Controller
                 control={control}
                 name="priority"
-                type="priority"
+                defaultValue=""
                 render={({ field }) => (
-                  <TextField {...field} className="mb-24" label="Priority" id="priority" variant="outlined" fullWidth />
+                  <TextField
+                    {...field}
+                    // {...addErrorIntoField(errors[name])}
+                    required
+                    select
+                    variant="filled"
+                    fullWidth
+                    label="Priority"
+                  >
+                    <MenuItem value="">-Select-</MenuItem>
+                    {options.map((option, index) => (
+                      <MenuItem key={index} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
                 )}
               />
             </div>
+            <br />
             <div className="flex">
               <Controller
                 control={control}
-                name="due_date"
+                name="date"
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -278,6 +296,141 @@ function ContactDialog(props) {
           )}
         </form>
       )}
+
+      {contactDialog.type === 'new' && (
+        <form noValidate onSubmit={handleSubmit(onSubmit)} className="flex flex-col md:overflow-hidden">
+          <DialogContent classes={{ root: 'p-24' }}>
+            <div className="flex">
+              <Controller
+                control={control}
+                name="issue_vehicle_id"
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    // {...addErrorIntoField(errors[name])}
+                    required
+                    select
+                    variant="filled"
+                    fullWidth
+                    label="Select a vehicle to create an issue"
+                  >
+                    <MenuItem value="">-None-</MenuItem>
+                    {issueVehicle.length > 0
+                      ? issueVehicle.map(option => (
+                          <MenuItem key={option.id} value={option.id}>
+                            {`${option.brand.toUpperCase()} ${option.model.toUpperCase()} || color: ${
+                              option.color
+                            } || year: ${new Date(option.manufacture_year).getFullYear()} `}
+                          </MenuItem>
+                        ))
+                      : ''}
+                  </TextField>
+                )}
+              />
+            </div>
+            <br />
+            <div className="flex">
+              <Controller
+                control={control}
+                name="title"
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField {...field} className="mb-24" label="Title" id="title" variant="outlined" fullWidth />
+                )}
+              />
+            </div>
+
+            <div className="flex">
+              <Controller
+                control={control}
+                name="priority"
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    // {...addErrorIntoField(errors[name])}
+                    required
+                    select
+                    variant="filled"
+                    fullWidth
+                    label="Priority"
+                  >
+                    <MenuItem value="">-Select-</MenuItem>
+                    {options.map((option, index) => (
+                      <MenuItem key={index} value={option.value}>
+                        {option.label}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                )}
+              />
+            </div>
+            <br />
+            <div className="flex">
+              <Controller
+                control={control}
+                name="due_date"
+                defaultValue=""
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    id="due_date"
+                    variant="outlined"
+                    type="date"
+                    label="Due Date"
+                    InputLabelProps={{
+                      shrink: true
+                    }}
+                    placeholder="2023"
+                    fullWidth
+                  />
+                )}
+              />
+            </div>
+          </DialogContent>
+
+          {contactDialog.type === 'new' ? (
+            <DialogActions className="justify-between p-4 pb-16">
+              <div className="px-16">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                  disabled={_.isEmpty(dirtyFields) || !isValid}
+                >
+                  Submit
+                </Button>
+              </div>
+              <div className="px-16">
+                <Button variant="contained" color="secondary" type="button" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </div>
+            </DialogActions>
+          ) : (
+            <DialogActions className="justify-between p-4 pb-16">
+              <div className="px-16">
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  type="submit"
+                  disabled={_.isEmpty(dirtyFields) || !isValid}
+                >
+                  Save
+                </Button>
+              </div>
+              <div className="px-16">
+                <Button variant="contained" color="secondary" type="button" onClick={handleCancel}>
+                  Cancel
+                </Button>
+              </div>
+            </DialogActions>
+          )}
+        </form>
+      )}
+
       {contactDialog.type === 'delete' && (
         <DialogActions className="justify-between p-4 pb-16">
           <div className="px-16">

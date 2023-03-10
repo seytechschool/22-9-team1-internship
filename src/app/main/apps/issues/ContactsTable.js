@@ -143,7 +143,11 @@ const EnhancedTable = ({ columns, data, onRowClick }) => {
                 >
                   {row.cells.map(cell => {
                     return (
-                      <TableCell {...cell.getCellProps()} className={clsx('p-4 md:p-12', cell.column.className)}>
+                      <TableCell
+                        key={columns.id}
+                        {...cell.getCellProps()}
+                        className={clsx('p-4 md:p-12', cell.column.className)}
+                      >
                         {cell.render('Cell')}
                       </TableCell>
                     );

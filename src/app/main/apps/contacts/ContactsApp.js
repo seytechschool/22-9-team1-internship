@@ -9,7 +9,7 @@ import ContactsHeader from './ContactsHeader';
 import ContactsList from './ContactsList';
 import ContactsSidebarContent from './ContactsSidebarContent';
 import reducer from './store';
-import { getDrivers, getVehicles } from './store/contactsSlice';
+import { getDrivers, getVehicles, getVehiclesForIssue } from './store/contactsSlice';
 import { getUserData } from './store/userSlice';
 
 function ContactsApp(props) {
@@ -22,6 +22,7 @@ function ContactsApp(props) {
     dispatch(getVehicles(routeParams));
     dispatch(getUserData());
     dispatch(getDrivers());
+    dispatch(getVehiclesForIssue())
   }, [dispatch, routeParams]);
 
   return (

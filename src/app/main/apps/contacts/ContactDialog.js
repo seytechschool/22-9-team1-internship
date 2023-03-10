@@ -4,6 +4,7 @@ import LocalShippingIcon from '@material-ui/icons/LocalShipping';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import FreeBreakfastIcon from '@material-ui/icons/FreeBreakfast';
 import AppBar from '@material-ui/core/AppBar';
 import Avatar from '@material-ui/core/Avatar';
 import Select from 'react-select';
@@ -73,10 +74,7 @@ function ContactDialog(props) {
   const dispatch = useDispatch();
   const contactDialog = useSelector(({ contactsApp }) => contactsApp.contacts.contactDialog);
   const drivers = useSelector(({ contactsApp }) => contactsApp.contacts.drivers);
-  // console.log('drivers for filter', drivers)
   const filteredDrivers = drivers === undefined ? [] : drivers.filter(driver => !driver.vehicle);
-  // console.log('filtered drivers ', filteredDrivers);
-
 
   const { control, watch, reset, handleSubmit, formState, getValues, setValue, setFieldValue } = useForm({
     mode: 'onChange',
@@ -122,7 +120,7 @@ function ContactDialog(props) {
         ...contactDialog.data
       });
     }
-       if (contactDialog.type === 'unassign') {
+    if (contactDialog.type === 'unassign') {
       reset({
         ...contactDialog.data
       });
@@ -192,6 +190,7 @@ function ContactDialog(props) {
             {contactDialog.type === 'edit' && 'Edit Vehicle'}
             {contactDialog.type === 'delete' && 'Remove Vehicle'}
             {contactDialog.type === 'assign' && 'Assign Vehicle'}
+            {contactDialog.type === 'unassign' && 'Unassign Vehicle'}
           </Typography>
         </Toolbar>
         <div className="flex flex-col items-center justify-center pb-24">
@@ -199,6 +198,7 @@ function ContactDialog(props) {
           {contactDialog.type === 'new' && <LocalShippingIcon style={{ fontSize: 100 }} />}
           {contactDialog.type === 'delete' && <DeleteForeverIcon style={{ fontSize: 100 }} />}
           {contactDialog.type === 'assign' && <SupervisorAccountIcon style={{ fontSize: 100 }} />}
+          {contactDialog.type === 'unassign' && <FreeBreakfastIcon style={{ fontSize: 100 }} />}
         </div>
       </AppBar>
       {contactDialog.type === 'assign' && (
@@ -208,6 +208,7 @@ function ContactDialog(props) {
               <Controller
                 control={control}
                 name="brand"
+                defaultValue=""
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -230,12 +231,12 @@ function ContactDialog(props) {
               <Controller
                 control={control}
                 name="drivers"
+                required
                 defaultValue=""
                 render={({ field }) => (
                   <TextField
                     {...field}
                     // {...addErrorIntoField(errors[name])}
-                    required
                     select
                     variant="filled"
                     fullWidth
@@ -258,6 +259,7 @@ function ContactDialog(props) {
               <Controller
                 control={control}
                 name="start_date"
+                defaultValue=""
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -266,6 +268,7 @@ function ContactDialog(props) {
                     variant="outlined"
                     type="date"
                     label="Date Of Start"
+                    required
                     InputLabelProps={{
                       shrink: true
                     }}
@@ -279,6 +282,8 @@ function ContactDialog(props) {
             <div className="flex">
               <Controller
                 name="starting_odometer"
+                defaultValue=""
+                required
                 control={control}
                 render={({ field }) => (
                   <TextField
@@ -289,7 +294,7 @@ function ContactDialog(props) {
                     error={!!errors.name}
                     helperText={errors?.name?.message}
                     variant="outlined"
-                    required
+                    type="number"
                     fullWidth
                   />
                 )}
@@ -300,6 +305,7 @@ function ContactDialog(props) {
               <Controller
                 control={control}
                 name="notes"
+                defaultValue=""
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -361,12 +367,14 @@ function ContactDialog(props) {
               <Controller
                 control={control}
                 name="end_odometer"
+                defaultValue=""
                 render={({ field }) => (
                   <TextField
                     {...field}
                     className="mb-24"
                     id="end_odometer"
                     variant="outlined"
+                    type="number"
                     label="End Odometer"
                     InputLabelProps={{
                       shrink: true
@@ -382,6 +390,7 @@ function ContactDialog(props) {
               <Controller
                 control={control}
                 name="notes"
+                defaultValue=""
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -442,6 +451,7 @@ function ContactDialog(props) {
             <div className="flex">
               <Controller
                 name="brand"
+                defaultValue=""
                 control={control}
                 render={({ field }) => (
                   <TextField
@@ -463,6 +473,7 @@ function ContactDialog(props) {
               <Controller
                 control={control}
                 name="model"
+                defaultValue=""
                 render={({ field }) => (
                   <TextField {...field} className="mb-24" label="Model" id="model" variant="outlined" fullWidth />
                 )}
@@ -505,6 +516,7 @@ function ContactDialog(props) {
               <Controller
                 control={control}
                 name="image_url"
+                defaultValue=""
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -522,6 +534,7 @@ function ContactDialog(props) {
               <Controller
                 control={control}
                 name="engine_number"
+                defaultValue=""
                 render={({ field }) => (
                   <TextField
                     {...field}
@@ -538,6 +551,7 @@ function ContactDialog(props) {
               <Controller
                 control={control}
                 name="plate_number"
+                defaultValue=""
                 render={({ field }) => (
                   <TextField
                     {...field}
