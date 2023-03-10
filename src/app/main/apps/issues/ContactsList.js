@@ -15,10 +15,8 @@ import {
   openDeleteContactDialog,
   openEditContactDialog,
   openNewContactDialog,
-  removeIssue,
   // toggleStarredContact,
   selectContacts,
-  updateIssue
 } from './store/contactsSlice';
 
 const formatDataIssue = vehicles =>

@@ -10,7 +10,7 @@ import { motion } from 'framer-motion';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectMainTheme } from 'app/store/fuse/settingsSlice';
 // import { useNavigate } from 'react-router-dom';
-import { addIssue, openEditContactDialog, openNewContactDialog, setContactsSearchText } from './store/contactsSlice';
+import {  openEditContactDialog, openNewContactDialog, setContactsSearchText } from './store/contactsSlice';
 
 function ContactsHeader(props) {
   const dispatch = useDispatch();
